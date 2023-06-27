@@ -10,4 +10,7 @@ import org.mybatis.spring.annotation.MapperScan;
 public interface UserDao2  {
     @Select("select * from user2 where UserId = #{id}")
     public User2 find(int id);
+
+
+
 }

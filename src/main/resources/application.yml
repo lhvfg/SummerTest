@@ -2,10 +2,10 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/dbs
+    url: jdbc:mysql://localhost:3306/dbx
     username: root
     password: yiti241325
-# ??mp???????????
+
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: false

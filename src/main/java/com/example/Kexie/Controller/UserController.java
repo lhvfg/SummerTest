@@ -16,7 +16,7 @@ public class UserController {
 @PostMapping("/add")
 void add ()
 {
-    
+
 }
 
     @Autowired

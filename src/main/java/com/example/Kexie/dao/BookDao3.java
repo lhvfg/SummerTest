@@ -7,6 +7,5 @@ import org.apache.ibatis.annotations.Select;
 
 @Mapper
 public interface BookDao3 extends BaseMapper<Book>  {
-//    @Select("select * from book where book_id = #{id}")
-//    public Book find1(int id);
+
 }

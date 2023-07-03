@@ -36,8 +36,11 @@ public class UserController {
     @PostMapping("/register")
     public Result add (@RequestBody User user)
     {
+        System.out.println(user.getUserName());
+        System.out.println(user.getEmail());
+        System.out.println(user.getPassword());
         Result result = new Result();
-        if (user.getUserName()!=null&&user.getPassword()!=null)
+        if (user.getUserName()!=null&&user.getPassword()!=null&&user.getEmail()!=null)
         {
             LambdaQueryWrapper<User> lqw = new LambdaQueryWrapper<>();
             lqw.eq(User::getUserName,user.getUserName());
@@ -87,7 +90,7 @@ public class UserController {
         if (userDao.selectOne( new LambdaQueryWrapper<User>().eq(User::getUserName,userName))==null){
             result.setStatus("UserNotExist");
         }
-        else if(data.getType().equals("changePasswordRequest"))
+        else if(data.getRequestType().equals("changePasswordRequest"))
         {
             LambdaQueryWrapper<User> lqw = new LambdaQueryWrapper<>();
             lqw.eq(User::getUserName,data.getUserName());
@@ -106,7 +109,7 @@ public class UserController {
                 int number=random.nextInt(62);
                 sb.append(str.charAt(number));
             }
-            map.put(data.getUserName(),sb.toString());
+            map.put(data.getUserName(),sb.toString());//如果还没过期，重复赋值也会覆盖之前的内容
             String code =map.get(data.getUserName());
             System.out.println("map中验证码是"+code);
             System.out.println("map中的数据数是"+map.size());
@@ -114,14 +117,14 @@ public class UserController {
             email.send();//进行发送
             result.setStatus("emailSented");
         }
-        else if(data.getType().equals("changePasswordTest"))
+        else if(data.getRequestType().equals("changePasswordTest"))
         {
             String code =map.get(data.getUserName());
             System.out.println("再次获取map中的数据数是"+map.size());
             System.out.println("再次获取map中的验证码是"+code);
             if(code==null)
             {
-                result.setStatus("changePasswordFail");
+                result.setStatus("codaExpired");
             }
             else if(data.getCode().equals(code))
             {
@@ -131,6 +134,9 @@ public class UserController {
                 lqw.eq(User::getUserName,data.getUserName());
                 userDao.update(user,lqw);
                 result.setStatus("changePasswordSucceed");
+            }
+            else{
+                result.setStatus("codeWrong");
             }
         }
         return result;

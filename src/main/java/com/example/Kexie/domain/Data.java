@@ -5,7 +5,7 @@ import java.sql.Time;
 
 @lombok.Data
 public class Data {
-    private String type;
+    private String requestType;
     private Integer id;
     private String userName;
     private String password;

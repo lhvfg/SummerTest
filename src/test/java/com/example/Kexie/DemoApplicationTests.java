@@ -1,6 +1,6 @@
 package com.example.Kexie;
 
-import com.example.Kexie.dao.BookDao3;
+import com.example.Kexie.dao.BookDao;
 import com.example.Kexie.dao.UserDao;
 import com.example.Kexie.domain.Book;
 import com.example.Kexie.domain.Result;
@@ -20,7 +20,7 @@ class DemoApplicationTests {
     @Autowired
     private UserDao userDao;
     @Autowired
-    private BookDao3 bookDao3;
+    private BookDao bookDao3;
     @Test
     public void GetAll()
     {

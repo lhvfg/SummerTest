@@ -1,9 +1,8 @@
 package com.example.Kexie.Controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.example.Kexie.dao.UserDao;
-import com.example.Kexie.domain.Data;
+import com.example.Kexie.domain.UserData;
 import com.example.Kexie.domain.Result;
 import com.example.Kexie.domain.User;
 import jakarta.servlet.http.HttpSession;
@@ -11,16 +10,13 @@ import net.jodah.expiringmap.ExpirationPolicy;
 import net.jodah.expiringmap.ExpiringMap;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
-import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -83,7 +79,7 @@ public class UserController {
         return result;
     };
     @PostMapping("/changePassword")
-    public Result changeRequest(@RequestBody Data data) throws EmailException {
+    public Result changeRequest(@RequestBody UserData data) throws EmailException {
         Result result = new Result();
         StringBuffer sb=new StringBuffer();
         String userName = data.getUserName();

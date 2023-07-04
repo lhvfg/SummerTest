@@ -13,4 +13,5 @@ public class Result {
     private Time todayTime;
     private Time allTime;
     private Integer teamId;
+    private Integer wordId;
 }

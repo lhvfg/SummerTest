@@ -20,14 +20,5 @@ public class User {
     private Time allTime;
     private Integer teamId;
     private String email;
-//  @TableField(value="id")
-//    @TableField("UserName")
-//    @TableField("Password")
-//    @TableField("TodayNum")
-//    @TableField("AllNum")
-//    @TableField("TodayTime")
-//    @TableField("AllTime")
-//    @TableField("TeamId")
-
 
 }

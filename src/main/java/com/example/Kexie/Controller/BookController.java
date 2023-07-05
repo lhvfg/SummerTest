@@ -29,19 +29,18 @@ public class BookController {
         Result result = new Result();
         QueryWrapper<Book> qw = new QueryWrapper<>();
         LambdaQueryWrapper<Book> lqw = new LambdaQueryWrapper<>();
+        // 进入页面，获取单词列表
         if(bookDate.getRequestType().equals("getWordList"))
         {
             //1 创建IPage分页对象,设置分页参数,1为当前页码，20为每页显示的记录数
-            IPage<Word> page=new Page<>(1,20);
+            IPage<Word> page=new Page<>(bookDate.getPageNumber(),15);
             //2 执行分页查询
             wordDao.selectPage(page,null);
             //3 获取分页结果
-//            System.out.println("当前页码值："+page.getCurrent());
-//            System.out.println("每页显示数："+page.getSize());
-//            System.out.println("一共多少页："+page.getPages());
-//            System.out.println("一共多少条数据："+page.getTotal());
-//            System.out.println("数据："+page.getRecords());
+            result.setPages(page.getPages()); // 总页数
+            result.setList(page.getRecords());
         }
+        //判断重名
         else if(bookDate.getRequestType().equals("addBookRequest"))
         {
             lqw.eq(Book::getBookName, bookDate.getBookName());
@@ -56,6 +55,7 @@ public class BookController {
                 result.setBookId(bookDao.selectOne(qw).getId());
             }
         }
+        //添加单词书
         else if(bookDate.getRequestType().equals("addBook"))
         {
             Integer[] wordId = bookDate.getWordId();

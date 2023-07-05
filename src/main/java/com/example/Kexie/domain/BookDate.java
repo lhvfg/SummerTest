@@ -11,4 +11,5 @@ public class BookDate {
     private Integer wordNum    ;
     private Integer[] wordId;
     private Integer bookId;
+    private Integer pageNumber;
 }

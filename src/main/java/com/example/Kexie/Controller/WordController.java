@@ -29,6 +29,7 @@ public class WordController {
         Result result = new Result();
         QueryWrapper<Word> qw = new QueryWrapper<>();
         LambdaQueryWrapper<Word> lqw = new LambdaQueryWrapper<>();
+        // 判断单词是否存在
         if(wordDate.getRequestType().equals("addWordRequest"))
         {
             lqw.eq(Word::getSpell, wordDate.getSpell());
@@ -45,6 +46,7 @@ public class WordController {
                 System.out.println(wordDao.selectOne(qw).getId());
             }
         }
+        //添加单词
         else if(wordDate.getRequestType().equals("addWord"))
         {
             int noteNum= wordDate.getNoteNum();
@@ -89,6 +91,8 @@ public class WordController {
             }
             result.setStatus("addWordSucceed");
         }
+        //获取单词书列表
+        else if (wordDate.getWordType().equals(""))
         return result;
     };
 

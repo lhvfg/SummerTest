@@ -14,4 +14,5 @@ public class Result {
     private Time allTime;
     private Integer teamId;
     private Integer wordId;
+    private Integer bookId;
 }

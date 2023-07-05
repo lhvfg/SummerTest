@@ -31,7 +31,8 @@ private Integer noteNum;
         this.noteNum = noteNum;
     }
 
-    public Word(String spell, Integer noteNum) {
+    public Word(Integer id,String spell, Integer noteNum) {
+        this.id = id;
         this.spell = spell;
         this.noteNum = noteNum;
     }

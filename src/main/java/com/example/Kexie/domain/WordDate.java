@@ -15,11 +15,13 @@ public class WordDate {
     private Time lastReview;
     private Integer count;
     private Integer finish;
+    //是否为新单词
+    private Integer wordType;
     //释义、例句、笔记的数量
     private Integer meaningNum;
     private Integer noteNum;
     private Integer sentenceNum;
-    //共享数据
+    //共享数据 单词序号
     private Integer wordId;
     //释义数据
     private String[] meaningContent;

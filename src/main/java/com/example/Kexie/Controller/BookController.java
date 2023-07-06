@@ -20,9 +20,9 @@ public class BookController {
     @Autowired
     BookDao bookDao;
     @Autowired
-    WordDao wordDao;
-    @Autowired
     Book_wordDao book_wordDao;
+    @Autowired
+    WordDao wordDao;
     @PostMapping("/addBook")
     public Result addBook(@RequestBody BookDate bookDate)
     {
@@ -59,9 +59,17 @@ public class BookController {
         else if(bookDate.getRequestType().equals("addBook"))
         {
             Integer[] wordId = bookDate.getWordId();
+            Integer wordNum = bookDate.getWordNum();
             Integer bookId = bookDate.getBookId();
-            Book book = new Book(bookDate.getBookName(),bookDate.getHide(),bookDate.getWordNum());
-            Book_word book_word = new Book_word();
+            Integer userId = bookDate.getUserId();
+            Book book = new Book(bookDate.getBookName(),bookDate.getHide(),wordNum,userId);
+            if (wordId!=null)
+            for (int i=0;i<wordNum;i++) {
+                Book_word book_word = new Book_word(wordId[i],bookId);
+                book_wordDao.insert(book_word);
+            }
+            bookDao.insert(book);
+            result.setStatus("addBookSucceed");
         }
         return result;
     }

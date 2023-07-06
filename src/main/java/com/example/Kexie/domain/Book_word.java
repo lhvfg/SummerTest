@@ -1,9 +1,12 @@
 package com.example.Kexie.domain;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
 @Data
 public class Book_word {
+    @TableId(type = IdType.AUTO)
     private Integer id;
     private Integer word_id;
     private Integer book_id;

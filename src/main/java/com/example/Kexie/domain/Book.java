@@ -13,10 +13,23 @@ public class Book {
  private String bookName    ;
  private Integer hide         ;
  private Integer wordNum    ;
+ private Integer userId;
 
  public Book(String bookName, Integer hide, Integer wordNum) {
   this.bookName = bookName;
   this.hide = hide;
+  this.wordNum = wordNum;
+ }
+
+ public Book(String bookName, Integer hide, Integer wordNum, Integer userId) {
+  this.bookName = bookName;
+  this.hide = hide;
+  this.wordNum = wordNum;
+  this.userId = userId;
+ }
+
+ public Book(Integer id, Integer wordNum) {
+  this.id = id;
   this.wordNum = wordNum;
  }
 

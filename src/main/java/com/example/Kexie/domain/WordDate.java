@@ -32,5 +32,7 @@ public class WordDate {
     //笔记
     private String[] noteContent;
     //选择的单词书序号
-    private Integer bookId;
+    private Integer[] bookId;
+    //添加的用户id
+    private Integer userId;
 }

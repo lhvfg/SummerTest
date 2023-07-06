@@ -9,5 +9,6 @@ public class Note {
     @TableId(type = IdType.AUTO)
 private Integer id;
 private Integer wordId;
+private Integer userId;
 private String content;
 }

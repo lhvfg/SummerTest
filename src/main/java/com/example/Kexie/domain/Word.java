@@ -12,6 +12,11 @@ public class Word {
 private Integer id  ;
 private String spell;
 
+    public Word(Integer id, String spell) {
+        this.id = id;
+        this.spell = spell;
+    }
 
-
+    public Word() {
+    }
 }

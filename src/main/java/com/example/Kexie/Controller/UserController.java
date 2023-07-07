@@ -71,6 +71,7 @@ public class UserController {
         }
         else if (user1.getPassword().equals(DigestUtils.md5DigestAsHex(password.getBytes()))){
             result.setStatus("loginSucceed");
+            result.setUserId(user1.getId());
             httpSession.setAttribute("userId",user1.getId());
         }
         else {

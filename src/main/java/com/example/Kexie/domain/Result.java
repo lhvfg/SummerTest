@@ -9,6 +9,7 @@ import java.util.List;
 public class Result {
     private String status;
     private String userName;
+    private Integer userId;
     private Integer todayNum;
     private Integer allNum;
     private Time todayTime;

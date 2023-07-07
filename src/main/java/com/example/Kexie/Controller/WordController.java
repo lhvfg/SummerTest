@@ -2,6 +2,8 @@ package com.example.Kexie.Controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.Kexie.dao.*;
 import com.example.Kexie.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @Transactional
@@ -105,9 +109,13 @@ public class WordController {
             }
             result.setStatus("addWordSucceed");
         }
-        //获取单词书列表
-        else if (wordDate.getWordType().equals("bookList"))
-        {};
+        //获取单词书列表，不用分页
+        else if (wordDate.getRequestType().equals("bookList"))
+        {
+            List<Book> books = bookDao.selectList(null);
+            result.setBookList(books);
+            result.setStatus("bookList");
+        };
 
   return result;
 }}

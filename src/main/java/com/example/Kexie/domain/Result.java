@@ -17,5 +17,6 @@ public class Result {
     private Integer wordId;
     private Integer bookId;
     private long pages;
-    private List<Word> list;
+    private List<Word> wordList;
+    private List<Book> bookList;
 }

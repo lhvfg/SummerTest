@@ -37,8 +37,9 @@ public class BookController {
             //2 执行分页查询
             wordDao.selectPage(page,null);
             //3 获取分页结果
+            result.setStatus("wordList");
             result.setPages(page.getPages()); // 总页数
-            result.setList(page.getRecords());
+            result.setWordList(page.getRecords());
         }
         //判断重名
         else if(bookDate.getRequestType().equals("addBookRequest"))

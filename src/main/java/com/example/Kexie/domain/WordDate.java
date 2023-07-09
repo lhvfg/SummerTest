@@ -26,6 +26,7 @@ public class WordDate {
     //释义数据
     private String[] meaningContent;
     private String[] function;
+
     //例句
     private String[] sentenceContent;
     private String[] sentenceContentMean;

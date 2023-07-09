@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.Kexie.dao.BookDao;
+import com.example.Kexie.dao.Book_userDao;
 import com.example.Kexie.dao.Book_wordDao;
 import com.example.Kexie.dao.WordDao;
 import com.example.Kexie.domain.*;
@@ -13,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @Transactional
@@ -23,6 +26,8 @@ public class BookController {
     Book_wordDao book_wordDao;
     @Autowired
     WordDao wordDao;
+    @Autowired
+    Book_userDao book_userDao;
     @PostMapping("/addBook")
     public Result addBook(@RequestBody BookDate bookDate)
     {
@@ -71,6 +76,22 @@ public class BookController {
             }
             bookDao.insert(book);
             result.setStatus("addBookSucceed");
+        }
+        return result;
+    }
+    @PostMapping("/chooseBook")
+    public Result chooseBook(@RequestBody  BookDate bookDate)
+    {
+        Result result = new Result();
+        if(bookDate.getRequestType().equals("chooseBookRequest")) {
+            List<Book> books = bookDao.selectList(null);
+            result.setBookList(books);
+            result.setStatus("bookList");
+        }
+        else if(bookDate.getRequestType().equals("chooseBook")){
+            Book_user book_user = new Book_user(bookDate.getBookId(),bookDate.getUserId());
+            book_userDao.insert(book_user);
+            result.setStatus("chooseSucceed");
         }
         return result;
     }

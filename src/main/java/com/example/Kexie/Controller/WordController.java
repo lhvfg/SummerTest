@@ -50,10 +50,6 @@ public class WordController {
         }
         //添加单词
         else if (wordDate.getRequestType().equals("addWord")) {
-            Integer noteNum= wordDate.getNoteNum();
-            Integer meaningNum= wordDate.getMeaningNum();
-            Integer sentenceNum= wordDate.getSentenceNum();
-
             Integer wordId = wordDate.getWordId();
             Integer userId = wordDate.getUserId();
             Integer[] bookId = wordDate.getBookId();
@@ -83,7 +79,7 @@ public class WordController {
                 noteDao.deleteWord(wordId);
             }
             //添加内容
-            for(int i=0;i<noteNum;i++)
+            for(int i=0;i<noteContent.length;i++)
             {
                 Note note = new Note();
                 note.setWordId(wordId);
@@ -91,7 +87,7 @@ public class WordController {
                 note.setUserId(userId);
                 noteDao.insert(note);
             }
-            for(int i=0;i<sentenceNum;i++)
+            for(int i=0;i<sentenceContent.length;i++)
             {
                 Sentence sentence = new Sentence();
                 sentence.setWordId(wordId);
@@ -99,7 +95,7 @@ public class WordController {
                 sentence.setContentMean(sentenceContentMean[i]);
                 sentenceDao.insert(sentence);
             }
-            for(int i=0;i<meaningNum;i++)
+            for(int i=0;i<meaningContent.length;i++)
             {
                 Meaning meaning = new Meaning();
                 meaning.setWordId(wordId);

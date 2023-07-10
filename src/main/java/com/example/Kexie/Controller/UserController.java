@@ -1,10 +1,10 @@
 package com.example.Kexie.Controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.example.Kexie.dao.Book_userDao;
+import com.example.Kexie.dao.TeamDao;
 import com.example.Kexie.dao.UserDao;
-import com.example.Kexie.domain.UserData;
-import com.example.Kexie.domain.Result;
-import com.example.Kexie.domain.User;
+import com.example.Kexie.domain.*;
 import jakarta.servlet.http.HttpSession;
 import net.jodah.expiringmap.ExpirationPolicy;
 import net.jodah.expiringmap.ExpiringMap;
@@ -29,6 +29,10 @@ public class UserController {
     ExpiringMap<String, String> map = ExpiringMap.builder()
             .expiration(300, TimeUnit.SECONDS)
             .variableExpiration().expirationPolicy(ExpirationPolicy.CREATED).build();
+    @Autowired
+    Book_userDao book_userDao;
+    @Autowired
+    TeamDao teamDao;
     @PostMapping("/register")
     public Result add (@RequestBody User user)
     {
@@ -61,21 +65,23 @@ public class UserController {
     @PostMapping("/login")
     public Result login (@RequestBody User user, HttpSession httpSession)
     {
-        Result result = new Result();
+        Result result;
         String userName = user.getUserName();
         String password = user.getPassword();
-        User user1 = userDao.selectOne( new LambdaQueryWrapper<User>().eq(User::getUserName,userName));
-        if(user1 == null)
+        User loginUser = userDao.selectOne( new LambdaQueryWrapper<User>().eq(User::getUserName,userName));
+        Integer userId = loginUser.getId();
+        Book_user book_user = book_userDao.selectOne(new LambdaQueryWrapper<Book_user>().eq(Book_user::getUserId,userId));
+        if(loginUser == null)
         {
-            result.setStatus("UserNotExist");
+             result = new Result("UserNotExist");
         }
-        else if (user1.getPassword().equals(DigestUtils.md5DigestAsHex(password.getBytes()))){
-            result.setStatus("loginSucceed");
-            result.setUserId(user1.getId());
-            httpSession.setAttribute("userId",user1.getId());
+        else if (loginUser.getPassword().equals(DigestUtils.md5DigestAsHex(password.getBytes()))){
+            Integer chooseBookId = book_user.getBookId();
+            result = new Result("loginSucceed",userName,userId,loginUser.getTodayNum(),loginUser.getAllNum(),loginUser.getTodayTime(),loginUser.getAllTime(),loginUser.getTeamId(),chooseBookId);
+            httpSession.setAttribute("userId",loginUser.getId());
         }
         else {
-            result.setStatus("PasswordWrong");
+            result = new Result("PasswordWrong");
         }
         return result;
     };

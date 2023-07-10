@@ -20,4 +20,23 @@ public class Result {
     private long pages;
     private List<Word> wordList;
     private List<Book> bookList;
+
+    public Result() {
+    }
+
+    public Result(String status, String userName, Integer userId, Integer todayNum, Integer allNum, Time todayTime, Time allTime, Integer teamId, Integer bookId) {
+        this.status = status;
+        this.userName = userName;
+        this.userId = userId;
+        this.todayNum = todayNum;
+        this.allNum = allNum;
+        this.todayTime = todayTime;
+        this.allTime = allTime;
+        this.teamId = teamId;
+        this.bookId = bookId;
+    }
+
+    public Result(String status) {
+        this.status = status;
+    }
 }

@@ -88,9 +88,14 @@ public class BookController {
             result.setBookList(books);
             result.setStatus("bookList");
         }
-        else if(bookDate.getRequestType().equals("chooseBook")){
+        else if(bookDate.getRequestType().equals("chooseBookAdd")){
             Book_user book_user = new Book_user(bookDate.getBookId(),bookDate.getUserId());
             book_userDao.insert(book_user);
+            result.setStatus("chooseSucceed");
+        }
+        else if(bookDate.getRequestType().equals("chooseBookUpdate")){
+            Book_user book_user = new Book_user(bookDate.getBookId(),bookDate.getUserId());
+            book_userDao.update(book_user,new LambdaQueryWrapper<Book_user>().eq(Book_user::getUserId,bookDate.getUserId()));
             result.setStatus("chooseSucceed");
         }
         return result;

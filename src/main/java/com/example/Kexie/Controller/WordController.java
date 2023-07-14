@@ -112,13 +112,6 @@ public class WordController {
         }
         return result;
     }
-    @PostMapping("/recite")
-    public Result recite(@RequestBody WordDate wordDate){
-        Result result = new Result();
-        if(wordDate.getRequestType().equals("getWords"))
-        {
-        }
-        return result;
-    }
+
 }
 

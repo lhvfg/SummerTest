@@ -9,6 +9,7 @@ import com.example.Kexie.dao.Book_userDao;
 import com.example.Kexie.dao.Book_wordDao;
 import com.example.Kexie.dao.WordDao;
 import com.example.Kexie.domain.*;
+import com.example.Kexie.domain.BasicPojo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;

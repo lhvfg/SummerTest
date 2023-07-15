@@ -1,4 +1,4 @@
-package com.example.Kexie.domain;
+package com.example.Kexie.domain.BasicPojo;
 
 import lombok.Data;
 

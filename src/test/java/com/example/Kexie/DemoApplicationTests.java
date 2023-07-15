@@ -5,11 +5,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.Kexie.dao.BookDao;
 import com.example.Kexie.dao.UserDao;
 import com.example.Kexie.dao.WordDao;
-import com.example.Kexie.domain.Book;
+import com.example.Kexie.domain.BasicPojo.Book;
 import com.example.Kexie.domain.Result;
-import com.example.Kexie.domain.User;
+import com.example.Kexie.domain.BasicPojo.User;
 
-import com.example.Kexie.domain.Word;
+import com.example.Kexie.domain.BasicPojo.Word;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

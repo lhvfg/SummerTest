@@ -5,7 +5,7 @@ import lombok.Data;
 import java.sql.Time;
 
 @Data
-//单词数据
+//添加单个单词时的单词数据
 public class WordDate {
     private String requestType;
 

@@ -1,9 +1,8 @@
 package com.example.Kexie.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.example.Kexie.domain.Book;
+import com.example.Kexie.domain.BasicPojo.Book;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 @Mapper

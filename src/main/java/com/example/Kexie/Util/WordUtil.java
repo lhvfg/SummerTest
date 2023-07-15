@@ -1,6 +1,6 @@
 //package com.example.Kexie.Util;
 //
-//import com.example.Kexie.domain.Word;
+//import com.example.Kexie.domain.BasicPojo.Word;
 //import com.example.Kexie.domain.WordDate;
 //
 //public class WordUtil {

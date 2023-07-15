@@ -1,7 +1,7 @@
 package com.example.Kexie.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.example.Kexie.domain.Book_user;
+import com.example.Kexie.domain.BasicPojo.Book_user;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper

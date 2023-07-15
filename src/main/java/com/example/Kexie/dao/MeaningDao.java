@@ -1,9 +1,7 @@
 package com.example.Kexie.dao;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.example.Kexie.domain.Meaning;
-import com.example.Kexie.domain.Word;
+import com.example.Kexie.domain.BasicPojo.Meaning;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 

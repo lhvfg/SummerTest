@@ -1,9 +1,12 @@
 package com.example.Kexie.domain;
 
+import com.example.Kexie.domain.BasicPojo.Book;
+import com.example.Kexie.domain.BasicPojo.Word;
 import lombok.Data;
 
 import java.sql.Time;
 import java.util.List;
+import java.util.Map;
 
 @Data
 public class Result {
@@ -20,6 +23,8 @@ public class Result {
     private long pages;
     private List<Word> wordList;
     private List<Book> bookList;
+    private ReciteWordDate[] reciteWordDates;
+
 
     public Result() {
     }

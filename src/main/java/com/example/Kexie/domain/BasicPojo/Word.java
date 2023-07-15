@@ -1,4 +1,4 @@
-package com.example.Kexie.domain;
+package com.example.Kexie.domain.BasicPojo;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;

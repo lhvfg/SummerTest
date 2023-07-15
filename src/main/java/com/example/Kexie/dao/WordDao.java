@@ -11,4 +11,6 @@ import java.util.List;
 public interface WordDao extends BaseMapper<Word> {
     @Select("SELECT spell,w.id FROM word w LEFT JOIN word_user wu ON w.id = wu.word_id AND wu.user_id = #{id} WHERE wu.id IS NULL")
     List<Word> selectNewWords(Integer id);
+    @Select("SELECT spell FROM word where id=#{id}")
+    String selectReciteWordSpell(Integer id);
 }

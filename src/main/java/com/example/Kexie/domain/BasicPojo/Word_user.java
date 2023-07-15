@@ -12,7 +12,6 @@ public class Word_user {
     private Time lastReview;
     private Integer count;
     private Integer finish;
-    private Integer noteNum;
     private Integer userId;
     private Integer wordId;
 }

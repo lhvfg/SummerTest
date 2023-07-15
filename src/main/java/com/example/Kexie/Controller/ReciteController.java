@@ -5,19 +5,20 @@ import com.example.Kexie.dao.*;
 import com.example.Kexie.domain.*;
 import com.example.Kexie.domain.BasicPojo.*;
 import com.example.Kexie.domain.Result;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @Transactional
 public class ReciteController {
     Result result = new Result();
+    ReciteWordDate[] reciteWordDates = new ReciteWordDate[10];
     @Autowired
     Book_userDao book_userDao;
     @Autowired
@@ -47,8 +48,8 @@ public class ReciteController {
     //整合单词显示数据
     private void getWordDate(Result result,List<Word> words,Integer userId)
     {
-        ReciteWordDate[] reciteWordDates = new ReciteWordDate[10];
         for (int i = 0; i < words.size(); i++) {
+            reciteWordDates[i] = new ReciteWordDate();
             reciteWordDates[i].setSpell(words.get(i).getSpell());
             reciteWordDates[i].setCount(0);
             //例句
@@ -61,23 +62,78 @@ public class ReciteController {
             Meaning meaning= meaningDao.selectOne(new LambdaQueryWrapper<Meaning>().eq(Meaning::getWordId,words.get(i).getId()));
             reciteWordDates[i].setMeaning(meaning);
             //近义词
-            ArrayList<String> Synonymous = new ArrayList<>();
-            List<Meaning> meanings = meaningDao.selectList(new LambdaQueryWrapper<Meaning>().eq(Meaning::getFunction, meaning.getFunction()).eq(Meaning::getContent, meaning.getContent()));
-            meanings.forEach(m->{
-                String spell = wordDao.selectOne(new LambdaQueryWrapper<Word>().eq(Word::getId, m.getWordId())).getSpell();
-                if(spell!=null)
-                {
-                    Synonymous.add(spell);
-                }
-            });
-            reciteWordDates[i].setSynonymous(Synonymous);
+            getSynonymous(reciteWordDates[i],meaning);
             //派生词
-
+            System.out.println(reciteWordDates[i]);
         }
         result.setReciteWordDates(reciteWordDates);
     }
-    //获取派生词
-    private ArrayList<String> getDerive(Word word){
-
+    //获取近义词
+    private void getSynonymous(ReciteWordDate reciteWordDate,Meaning wordMean){
+        Map<Map<String,String>,Set<String>> Synonymous = new HashMap<>();
+        Set<String> spells = new TreeSet<>();
+        Map<String,String> mean = new HashMap<>();
+        String[] specificChar = {",", "，",";","；"};
+        boolean f = false;
+        //用中英文逗号和分号符号分割字符串
+        for (int i = 0; i < specificChar.length; i++) {
+            if (wordMean.getContent().contains(specificChar[i])) {
+                f=true;
+                for (String wordMeanContent : wordMean.getContent().split(specificChar[i])) {
+                    //获取含有相同释义的所有meaning数据
+                    List<Meaning> meanings = meaningDao.selectList(
+                            new LambdaQueryWrapper<Meaning>()
+                                    .eq(Meaning::getFunction, wordMean.getFunction())//词性相同
+                                    .like(Meaning::getContent, wordMeanContent)//模糊查询，包含相同释义
+                                    .ne(Meaning::getId, wordMean.getId())//不是自己
+                    );
+                    //如果存在除了自己的近义词
+                    if (meanings.size() > 0) {
+                        System.out.println("存在近义词");
+                        //设置前键
+                        mean.put(meanings.get(0).getFunction(), wordMeanContent);
+                        //对于每个释义相应的单词id，查询对应拼写
+                        meanings.forEach(m -> {
+                            String spell = wordDao.selectReciteWordSpell(m.getWordId());
+                            spells.add(spell);
+                        });
+                        Synonymous.put(mean, spells);
+                        //返回除了自己所有近义词的拼写
+                        reciteWordDate.setSynonymous(Synonymous);
+                        System.out.println(reciteWordDate);
+                    }
+                }
+            }
+        }
+        if (!f)
+        {
+            //获取含有相同释义的所有meaning数据
+            List<Meaning> meanings = meaningDao.selectList(
+                    new LambdaQueryWrapper<Meaning>()
+                                .eq(Meaning::getFunction, wordMean.getFunction())//词性相同
+                                .like(Meaning::getContent, wordMean.getContent())//模糊查询，包含相同释义
+                                .ne(Meaning::getId, wordMean.getId()));   //不是自己
+            //如果存在除了自己的近义词
+            if (meanings.size() > 0) {
+                System.out.println("存在近义词");
+                //设置前键
+                mean.put(meanings.get(0).getFunction(), wordMean.getContent());
+                //对于每个释义相应的单词id，查询对应拼写
+                meanings.forEach(m -> {
+                    String spell = wordDao.selectReciteWordSpell(m.getWordId());
+                    spells.add(spell);
+                });
+                Synonymous.put(mean, spells);
+                //返回除了自己所有近义词的拼写
+                reciteWordDate.setSynonymous(Synonymous);
+                System.out.println(reciteWordDate);
+                }
+        }
     }
+    //    //获取派生词
+//    private void getDerive(Word word){
+//
+//    }
 }
+
+

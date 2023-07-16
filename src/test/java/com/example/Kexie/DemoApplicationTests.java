@@ -71,4 +71,10 @@ class DemoApplicationTests {
         }
         return result;
     }
+    @Test
+    public void srtingHandle()
+    {
+        String str = "ab";
+        System.out.println("处理后："+str.substring(1, str.length()-1));
+    }
 }

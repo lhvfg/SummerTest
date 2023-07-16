@@ -85,6 +85,7 @@ public class WordController {
                 note.setWordId(wordId);
                 note.setContent(noteContent[i]);
                 note.setUserId(userId);
+                if (noteContent[i]!=null)
                 noteDao.insert(note);
             }
             for (int i = 0; i < sentenceContent.length; i++) {

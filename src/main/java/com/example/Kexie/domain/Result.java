@@ -23,7 +23,9 @@ public class Result {
     private long pages;
     private List<Word> wordList;
     private List<Book> bookList;
-    private ReciteWordDate[] reciteWordDates;
+    private ReciteWordDate[] reciteNewWordDates;
+    private ReciteWordDate[] reciteOneWordDates;
+    private ReciteWordDate[] recitetwoWordDates;
 
 
     public Result() {

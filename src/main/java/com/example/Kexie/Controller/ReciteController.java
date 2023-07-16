@@ -5,7 +5,6 @@ import com.example.Kexie.dao.*;
 import com.example.Kexie.domain.*;
 import com.example.Kexie.domain.BasicPojo.*;
 import com.example.Kexie.domain.Result;
-import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,7 +17,7 @@ import java.util.*;
 @Transactional
 public class ReciteController {
     Result result = new Result();
-    ReciteWordDate[] reciteWordDates = new ReciteWordDate[10];
+    ReciteWordDate[][] reciteWordDates = new ReciteWordDate[3][10];
     @Autowired
     Book_userDao book_userDao;
     @Autowired
@@ -39,34 +38,46 @@ public class ReciteController {
         if(reciteDate.getRequestType().equals("getWords"))
         {
             List<Word> newWords = wordDao.selectNewWords(userId);
-            List<Word_user> countOneWords = word_userDao.selectList(new LambdaQueryWrapper<Word_user>().eq(Word_user::getCount, 1).eq(Word_user::getUserId,userId));
-            List<Word_user> countTwoWords = word_userDao.selectList(new LambdaQueryWrapper<Word_user>().eq(Word_user::getCount, 2).eq(Word_user::getUserId,userId));
-            getWordDate(result,newWords,userId);
+            List<Word> countOneWords = wordDao.selectCountWords(1,userId);
+            List<Word> countTwoWords = wordDao.selectCountWords(2,userId);
+//            List<Word_user> countOneWords = word_userDao.selectList(new LambdaQueryWrapper<Word_user>().eq(Word_user::getCount, 1).eq(Word_user::getUserId,userId));
+//            List<Word_user> countTwoWords = word_userDao.selectList(new LambdaQueryWrapper<Word_user>().eq(Word_user::getCount, 2).eq(Word_user::getUserId,userId));
+            getWordDate(result,newWords,userId,0);
+            getWordDate(result,countOneWords,userId,1);
+            getWordDate(result,countTwoWords,userId,2);
         }
         return result;
     }
     //整合单词显示数据
-    private void getWordDate(Result result,List<Word> words,Integer userId)
+    private void getWordDate(Result result,List<Word> words,Integer userId,Integer count)
     {
-        for (int i = 0; i < words.size(); i++) {
-            reciteWordDates[i] = new ReciteWordDate();
-            reciteWordDates[i].setSpell(words.get(i).getSpell());
-            reciteWordDates[i].setCount(0);
-            //例句
-            Sentence sentence= sentenceDao.selectOne(new LambdaQueryWrapper<Sentence>().eq(Sentence::getWordId,words.get(i).getId()));
-            reciteWordDates[i].setSentence(sentence);
-            //笔记
-            List<Note> notes= noteDao.selectList(new LambdaQueryWrapper<Note>().eq(Note::getWordId,words.get(i).getId()).eq(Note::getUserId,userId));
-            reciteWordDates[i].setNotes(notes);
-            //释义
-            Meaning meaning= meaningDao.selectOne(new LambdaQueryWrapper<Meaning>().eq(Meaning::getWordId,words.get(i).getId()));
-            reciteWordDates[i].setMeaning(meaning);
-            //近义词
-            getSynonymous(reciteWordDates[i],meaning);
-            //派生词
-            System.out.println(reciteWordDates[i]);
+        if (words.size()!=0) {
+            for (int i = 0; i < words.size(); i++) {
+                String spell = words.get(i).getSpell();
+                reciteWordDates[count][i] = new ReciteWordDate();
+                reciteWordDates[count][i].setSpell(spell);
+                reciteWordDates[count][i].setCount(count);
+                //例句
+                Sentence sentence = sentenceDao.selectOne(new LambdaQueryWrapper<Sentence>().eq(Sentence::getWordId, words.get(i).getId()));
+                reciteWordDates[count][i].setSentence(sentence);
+                //笔记
+                List<Note> notes = noteDao.selectList(new LambdaQueryWrapper<Note>().eq(Note::getWordId, words.get(i).getId()).eq(Note::getUserId, userId));
+                reciteWordDates[count][i].setNotes(notes);
+                //释义
+                Meaning meaning = meaningDao.selectOne(new LambdaQueryWrapper<Meaning>().eq(Meaning::getWordId, words.get(i).getId()));
+                reciteWordDates[count][i].setMeaning(meaning);
+                //近义词
+                getSynonymous(reciteWordDates[count][i], meaning);
+                //派生词
+                getDerive(reciteWordDates[count][i], spell);
+            }
+            if (count == 0)
+                result.setReciteNewWordDates(reciteWordDates[count]);
+            else if (count == 1)
+                result.setReciteOneWordDates(reciteWordDates[count]);
+            else if (count == 2)
+                result.setRecitetwoWordDates(reciteWordDates[count]);
         }
-        result.setReciteWordDates(reciteWordDates);
     }
     //获取近义词
     private void getSynonymous(ReciteWordDate reciteWordDate,Meaning wordMean){
@@ -130,10 +141,11 @@ public class ReciteController {
                 }
         }
     }
-    //    //获取派生词
-//    private void getDerive(Word word){
-//
-//    }
+    //获取派生词
+    private void getDerive(ReciteWordDate reciteWordDate,String spell){
+        char[] charSpell = spell.toCharArray();
+        List<Word> derviedWords = wordDao.selectList(new LambdaQueryWrapper<Word>().like(Word::getSpell, spell));
+    }
 }
 
 

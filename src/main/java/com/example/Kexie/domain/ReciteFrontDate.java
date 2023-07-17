@@ -7,7 +7,9 @@ import lombok.Data;
 public class ReciteFrontDate {
     private String RequestType;
     private Integer userId;
-    private Integer bookId;
-    private String[] words;
-    private Integer count;
+    private Integer wordId;
+    //背了几个
+    private Integer number;
+    //学了多少秒
+    private Integer time;
 }

@@ -1,11 +1,14 @@
 package com.example.Kexie;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.Kexie.dao.BookDao;
 import com.example.Kexie.dao.UserDao;
 import com.example.Kexie.dao.WordDao;
+import com.example.Kexie.dao.Word_userDao;
 import com.example.Kexie.domain.BasicPojo.Book;
+import com.example.Kexie.domain.BasicPojo.Word_user;
 import com.example.Kexie.domain.Result;
 import com.example.Kexie.domain.BasicPojo.User;
 
@@ -27,6 +30,8 @@ class DemoApplicationTests {
     private BookDao bookDao3;
     @Autowired
     private WordDao wordDao;
+    @Autowired
+    private Word_userDao word_userDao;
     @Test
     public void PageSelect(){
         IPage<Word> page=new Page<>(1,2);
@@ -77,4 +82,15 @@ class DemoApplicationTests {
         String str = "ab";
         System.out.println("处理后："+str.substring(1, str.length()-1));
     }
-}
+    @Test
+    public void changeTimeNum()
+    {
+        System.out.println(userDao.changeNumTime(1,10,3));
+    }
+    @Test
+    public void deleteWord()
+    {
+        System.out.println(word_userDao.delete(new LambdaQueryWrapper<Word_user>().eq(Word_user::getUserId, 3).eq(Word_user::getWordId, 1)));
+        System.out.println(word_userDao.delete(new LambdaQueryWrapper<Word_user>().eq(Word_user::getUserId, 4).eq(Word_user::getWordId, 1)));
+    }
+    }

@@ -2,6 +2,7 @@ package com.example.Kexie.Controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.example.Kexie.Util.DeriveWordUtil;
+import com.example.Kexie.Util.SynonymousUtil;
 import com.example.Kexie.dao.*;
 import com.example.Kexie.domain.*;
 import com.example.Kexie.domain.BasicPojo.*;
@@ -20,6 +21,7 @@ public class ReciteController {
     Result result = new Result();
     ReciteWordDate[][] reciteWordDates = new ReciteWordDate[3][10];
     DeriveWordUtil deriveWordUtil = new DeriveWordUtil();
+    SynonymousUtil synonymousUtil = new SynonymousUtil();
     @Autowired
     Book_userDao book_userDao;
     @Autowired
@@ -32,10 +34,13 @@ public class ReciteController {
     NoteDao noteDao;
     @Autowired
     MeaningDao meaningDao;
+    @Autowired
+    UserDao userDao;
     @PostMapping("/recite")
     public Result Recitewords(@RequestBody ReciteFrontDate reciteDate)
     {
         Integer userId = reciteDate.getUserId();
+        Integer wordId = reciteDate.getWordId();
         LambdaQueryWrapper<Word_user> lqw = new LambdaQueryWrapper<>();
         if(reciteDate.getRequestType().equals("getWords"))
         {
@@ -47,6 +52,42 @@ public class ReciteController {
             getWordDate(result,newWords,userId,0);
             getWordDate(result,countOneWords,userId,1);
             getWordDate(result,countTwoWords,userId,2);
+            result.setStatus("reciteWords");
+        }
+        else if (reciteDate.getRequestType().equals("right"))
+        {
+             if (word_userDao.countAdd(wordId,userId))
+             {
+                 result.setStatus("countAdd");
+             }
+        }
+        else if(reciteDate.getRequestType().equals("wordRecite"))
+        {
+            if (word_userDao.wordRecite(wordId,userId))
+            {
+                result.setStatus("wordRecite");
+            }
+        }
+        else if (reciteDate.getRequestType().equals("wrong"))
+        {
+            if (word_userDao.countClear(wordId,userId))
+            {
+                result.setStatus("countClear");
+            }
+        }
+        else if(reciteDate.getRequestType().equals("reciteOver"))
+        {
+            if (userDao.changeNumTime(reciteDate.getNumber(),reciteDate.getTime(),userId))
+            {
+                result.setStatus("timeNumChanged");
+            }
+        }
+        else if(reciteDate.getRequestType().equals("delete"))
+        {
+            if (word_userDao.delete(new LambdaQueryWrapper<Word_user>().eq(Word_user::getUserId,userId).eq(Word_user::getWordId,wordId))!=0)
+            {
+                result.setStatus("deleteSuccess");
+            }
         }
         return result;
     }
@@ -72,7 +113,7 @@ public class ReciteController {
                     //近义词
                     int finalI = i;
                     meanings.forEach(meaning -> {
-                        getSynonymous(reciteWordDates[count][finalI], meaning);
+                        synonymousUtil.getSynonymous(reciteWordDates[count][finalI], meaning,meaningDao,wordDao);
                     });
                 }
                 //派生词
@@ -85,63 +126,6 @@ public class ReciteController {
             else if (count == 2)
                 result.setRecitetwoWordDates(reciteWordDates[count]);
         }
-    }
-    //获取近义词
-    private void getSynonymous(ReciteWordDate reciteWordDate,Meaning wordMean){
-        String[] specificChar = {",", "，",";","；"};
-        //用中英文逗号和分号符号分割字符串
-        for (String wordMeanContent : wordMean.getContent().split("[,;，；]"))
-        {
-            Map<Map<String,String>,Set<String>> Synonymous = new HashMap<>();
-            Set<String> spells = new TreeSet<>();
-            Map<String,String> mean = new HashMap<>();
-            //获取含有相同释义的所有meaning数据
-            List<Meaning> meanings = meaningDao.selectList(
-                    new LambdaQueryWrapper<Meaning>()
-                            .eq(Meaning::getFunction, wordMean.getFunction())//词性相同
-                            .like(Meaning::getContent, wordMeanContent)//模糊查询，包含相同释义
-                            .ne(Meaning::getId, wordMean.getId())//不是自己
-            );
-            //如果存在除了自己的近义词
-            if (meanings.size() > 0) {
-                System.out.println("存在近义词");
-                //设置前键
-                mean.put(meanings.get(0).getFunction(), wordMeanContent);
-                //对于每个释义相应的单词id，查询对应拼写
-                meanings.forEach(m -> {
-                    String spell = wordDao.selectReciteWordSpell(m.getWordId());
-                    spells.add(spell);
-                });
-                Synonymous.put(mean, spells);
-                //返回除了自己所有近义词的拼写
-                reciteWordDate.setSynonymous(Synonymous);
-                System.out.println(reciteWordDate);
-            }
-        }
-//        if (!f)
-//        {
-//            //获取含有相同释义的所有meaning数据
-//            List<Meaning> meanings = meaningDao.selectList(
-//                    new LambdaQueryWrapper<Meaning>()
-//                                .eq(Meaning::getFunction, wordMean.getFunction())//词性相同
-//                                .like(Meaning::getContent, wordMean.getContent())//模糊查询，包含相同释义
-//                                .ne(Meaning::getId, wordMean.getId()));   //不是自己
-//            //如果存在除了自己的近义词
-//            if (meanings.size() > 0) {
-//                System.out.println("存在近义词");
-//                //设置前键
-//                mean.put(meanings.get(0).getFunction(), wordMean.getContent());
-//                //对于每个释义相应的单词id，查询对应拼写
-//                meanings.forEach(m -> {
-//                    String spell = wordDao.selectReciteWordSpell(m.getWordId());
-//                    spells.add(spell);
-//                });
-//                Synonymous.put(mean, spells);
-//                //返回除了自己所有近义词的拼写
-//                reciteWordDate.setSynonymous(Synonymous);
-//                System.out.println(reciteWordDate);
-//                }
-//        }
     }
 }
 

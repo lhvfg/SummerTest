@@ -6,6 +6,7 @@ import com.example.Kexie.domain.BasicPojo.Sentence;
 import com.example.Kexie.domain.BasicPojo.Word;
 import lombok.Data;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

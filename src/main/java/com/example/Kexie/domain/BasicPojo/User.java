@@ -20,5 +20,13 @@ public class User {
     private Time allTime;
     private Integer teamId;
     private String email;
+    private Data lastLoginTime;
 
+    public User() {
+    }
+
+    public User(Integer todayNum, Time todayTime) {
+        this.todayNum = todayNum;
+        this.todayTime = todayTime;
+    }
 }

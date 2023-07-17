@@ -15,6 +15,6 @@ public interface WordDao extends BaseMapper<Word> {
     List<Word> selectNewWords(Integer id);
     @Select("SELECT spell FROM word where id=#{id}")
     String selectReciteWordSpell(Integer id);
-    @Select("SELECT * FROM word WHERE id IN (SELECT word_id FROM word_user WHERE count = #{count} AND user_id = #{id})")
+    @Select("SELECT * FROM word WHERE id IN (SELECT word_id FROM word_user WHERE count = #{count} AND user_id = #{id} AND finish = 0 AND recite = 0)")
     List<Word> selectCountWords(Integer count,Integer id);
 }

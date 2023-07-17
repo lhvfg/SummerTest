@@ -9,6 +9,7 @@ import com.example.Kexie.domain.BasicPojo.Book_user;
 import com.example.Kexie.domain.Result;
 import com.example.Kexie.domain.BasicPojo.User;
 import jakarta.servlet.http.HttpSession;
+import lombok.Data;
 import net.jodah.expiringmap.ExpirationPolicy;
 import net.jodah.expiringmap.ExpiringMap;
 import org.apache.commons.mail.EmailException;
@@ -69,6 +70,7 @@ public class UserController {
     public Result login (@RequestBody User user, HttpSession httpSession)
     {
         Result result;
+        Data data = user.getLastLoginTime();
         String userName = user.getUserName();
         String password = user.getPassword();
         User loginUser = userDao.selectOne( new LambdaQueryWrapper<User>().eq(User::getUserName,userName));
@@ -82,6 +84,11 @@ public class UserController {
             Integer chooseBookId = book_user.getBookId();
             result = new Result("loginSucceed",userName,userId,loginUser.getTodayNum(),loginUser.getAllNum(),loginUser.getTodayTime(),loginUser.getAllTime(),loginUser.getTeamId(),chooseBookId);
             httpSession.setAttribute("userId",loginUser.getId());
+            if (data!=loginUser.getLastLoginTime())
+            {
+                User updateUser= new User(0,null);
+                userDao.update(updateUser,new LambdaQueryWrapper<User>().eq(User::getId,loginUser.getId()));
+            }
         }
         else {
             result = new Result("PasswordWrong");

@@ -20,6 +20,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Set;
+
 @SpringBootTest
 @RestController
 class DemoApplicationTests {
@@ -93,4 +97,5 @@ class DemoApplicationTests {
         System.out.println(word_userDao.delete(new LambdaQueryWrapper<Word_user>().eq(Word_user::getUserId, 3).eq(Word_user::getWordId, 1)));
         System.out.println(word_userDao.delete(new LambdaQueryWrapper<Word_user>().eq(Word_user::getUserId, 4).eq(Word_user::getWordId, 1)));
     }
+
     }

@@ -27,7 +27,7 @@ public class SynonymousUtil {
             );
             //如果存在除了自己的近义词
             if (meanings.size() > 0) {
-                System.out.println("存在近义词");
+                //System.out.println("存在近义词");
                 //设置前键
                 mean.put(meanings.get(0).getFunction(), wordMeanContent);
                 //对于每个释义相应的单词id，查询对应拼写
@@ -38,7 +38,7 @@ public class SynonymousUtil {
                 Synonymous.put(mean, spells);
                 //返回除了自己所有近义词的拼写
                 reciteWordDate.setSynonymous(Synonymous);
-                System.out.println(reciteWordDate);
+                //System.out.println(reciteWordDate);
             }
         }
 //        if (!f)

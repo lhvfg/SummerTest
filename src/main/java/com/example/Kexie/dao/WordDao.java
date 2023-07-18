@@ -27,7 +27,7 @@ public interface WordDao extends BaseMapper<Word> {
     List<Word> selectNewStarWords(Integer userId);
     //在生词本中背过特定次数的单词
     @Select("SELECT * FROM word WHERE id IN" +
-            "(SELECT wu.word_id FROM word_user wu WHERE wu.count = #{count} AND wu.user_id = {userId} AND wu.finish = 0 AND wu.recite = 0 AND wu.word_id IN" +
+            "(SELECT wu.word_id FROM word_user wu WHERE wu.count = #{count} AND wu.user_id = #{userId} AND wu.finish = 0 AND wu.recite = 0 AND wu.word_id IN" +
             "(SELECT sb.word_id FROM star_book sb WHERE sb.user_id = #{userId}))")
     List<Word> selectCountStarWords(Integer count,Integer userId);
 }

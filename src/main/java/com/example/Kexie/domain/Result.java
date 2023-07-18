@@ -46,4 +46,11 @@ public class Result {
     public Result(String status) {
         this.status = status;
     }
+
+    public Result(String status, ReciteWordDate[] reciteNewWordDates, ReciteWordDate[] reciteOneWordDates, ReciteWordDate[] recitetwoWordDates) {
+        this.status = status;
+        this.reciteNewWordDates = reciteNewWordDates;
+        this.reciteOneWordDates = reciteOneWordDates;
+        this.recitetwoWordDates = recitetwoWordDates;
+    }
 }

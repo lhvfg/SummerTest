@@ -14,4 +14,6 @@ public class ReciteFrontDate {
     private Integer time;
     //在背那一本
     private Integer bookId;
+    //是否开启生词本学习
+    private Boolean starOpen;
 }

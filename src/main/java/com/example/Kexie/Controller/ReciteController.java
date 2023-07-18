@@ -41,15 +41,26 @@ public class ReciteController {
     {
         Integer userId = reciteDate.getUserId();
         Integer wordId = reciteDate.getWordId();
+        Integer bookId = reciteDate.getBookId();
         LambdaQueryWrapper<Word_user> lqw = new LambdaQueryWrapper<>();
         if(reciteDate.getRequestType().equals("getWords"))
         {
-            List<Word> newWords = wordDao.selectNewWords(userId);
-            List<Word> countOneWords = wordDao.selectCountWords(1,userId);
-            List<Word> countTwoWords = wordDao.selectCountWords(2,userId);
+            List<Word> newWords = wordDao.selectNewWords(bookId);
+            List<Word> newStarWords = wordDao.selectNewStarWords(userId);
+            List<Word> countOneWords = wordDao.selectCountWords(1,userId,bookId);
+            List<Word> countOneStarWords = wordDao.selectCountStarWords(1,userId);
+            List<Word> countTwoWords = wordDao.selectCountWords(2,userId,bookId);
+            List<Word> countTwoStarWords = wordDao.selectCountStarWords(2,userId);
 //            List<Word_user> countOneWords = word_userDao.selectList(new LambdaQueryWrapper<Word_user>().eq(Word_user::getCount, 1).eq(Word_user::getUserId,userId));
 //            List<Word_user> countTwoWords = word_userDao.selectList(new LambdaQueryWrapper<Word_user>().eq(Word_user::getCount, 2).eq(Word_user::getUserId,userId));
-            getWordDate(result,newWords,userId,0);
+            if (newStarWords.size()>10)
+            {
+                getWordDate(result,newStarWords,userId,0);
+            }
+            else {
+                getWordDate(result,newStarWords,userId,0);
+            //指定List长度的部分    getWordDate(result,newWords,userId,0);
+            }
             getWordDate(result,countOneWords,userId,1);
             getWordDate(result,countTwoWords,userId,2);
             result.setStatus("reciteWords");
@@ -95,7 +106,7 @@ public class ReciteController {
     private void getWordDate(Result result,List<Word> words,Integer userId,Integer count)
     {
         if (words.size()!=0) {
-            for (int i = 0; i < words.size(); i++) {
+            for (int i = 0; i < (Math.min(words.size(), 10)); i++) {
                 String spell = words.get(i).getSpell();
                 reciteWordDates[count][i] = new ReciteWordDate();
                 reciteWordDates[count][i].setSpell(spell);

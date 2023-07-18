@@ -12,4 +12,6 @@ public class ReciteFrontDate {
     private Integer number;
     //学了多少秒
     private Integer time;
+    //在背那一本
+    private Integer bookId;
 }

@@ -20,7 +20,7 @@ public class User {
     private Time allTime;
     private Integer teamId;
     private String email;
-    private Data lastLoginTime;
+    private String lastLoginTime;
 
     public User() {
     }
@@ -28,5 +28,11 @@ public class User {
     public User(Integer todayNum, Time todayTime) {
         this.todayNum = todayNum;
         this.todayTime = todayTime;
+    }
+
+    public User(Integer todayNum, Time todayTime, String lastLoginTime) {
+        this.todayNum = todayNum;
+        this.todayTime = todayTime;
+        this.lastLoginTime = lastLoginTime;
     }
 }

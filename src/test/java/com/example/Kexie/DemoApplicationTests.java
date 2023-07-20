@@ -97,5 +97,12 @@ class DemoApplicationTests {
         System.out.println(word_userDao.delete(new LambdaQueryWrapper<Word_user>().eq(Word_user::getUserId, 3).eq(Word_user::getWordId, 1)));
         System.out.println(word_userDao.delete(new LambdaQueryWrapper<Word_user>().eq(Word_user::getUserId, 4).eq(Word_user::getWordId, 1)));
     }
-
+    @Test
+    public void getTime()
+    {
+        System.out.println(userDao.selectById(2).getLastLoginTime());
+        User user = new User();
+        user.setLastLoginTime("2023-07-17");
+        userDao.update(user,new LambdaQueryWrapper<User>().eq(User::getId,3));
+    }
     }

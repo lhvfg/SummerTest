@@ -24,7 +24,6 @@ public class ReciteController {
     ArrayList<Set<String>> wordSet = new ArrayList<>();
     DeriveWordUtil deriveWordUtil = new DeriveWordUtil();
     SynonymousUtil synonymousUtil = new SynonymousUtil();
-//  GetWordDateUtil getWordDateUtil = new GetWordDateUtil();
     @Autowired
     Book_userDao book_userDao;
     @Autowired
@@ -39,6 +38,8 @@ public class ReciteController {
     MeaningDao meaningDao;
     @Autowired
     UserDao userDao;
+    @Autowired
+    StarBookDao starBookDao;
     @PostMapping("/recite")
     public Result Recitewords(@RequestBody ReciteFrontDate reciteDate)
     {
@@ -111,6 +112,22 @@ public class ReciteController {
             }
         }
         //加入生词本
+        else if(reciteDate.getRequestType().equals("addStar"))
+        {
+            StarBook starBook = new StarBook(userId,wordId);
+            if (starBookDao.insert(starBook)!=0)
+            {
+                result.setStatus("addStar");
+            }
+        }
+        //去除生词
+        else if(reciteDate.getRequestType().equals("deletestar"))
+        {
+            if (starBookDao.delete(new LambdaQueryWrapper<StarBook>().eq(StarBook::getUser_id,userId).eq(StarBook::getWord_id,wordId))!=0)
+            {
+                result.setStatus("deleteStar");
+            }
+        }
         return result;
     }
 

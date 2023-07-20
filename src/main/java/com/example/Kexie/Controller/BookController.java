@@ -10,6 +10,7 @@ import com.example.Kexie.dao.Book_wordDao;
 import com.example.Kexie.dao.WordDao;
 import com.example.Kexie.domain.*;
 import com.example.Kexie.domain.BasicPojo.*;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -81,8 +82,9 @@ public class BookController {
         return result;
     }
     @PostMapping("/chooseBook")
-    public Result chooseBook(@RequestBody  BookDate bookDate)
+    public Result chooseBook(@RequestBody  BookDate bookDate, HttpSession httpSession)
     {
+        //System.out.println(httpSession+"地址中的userId为"+httpSession.getAttribute("userId"));
         Result result = new Result();
         if(bookDate.getRequestType().equals("chooseBookRequest")) {
             List<Book> books = bookDao.selectList(null);

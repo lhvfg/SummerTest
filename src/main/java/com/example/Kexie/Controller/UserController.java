@@ -19,8 +19,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -37,6 +42,11 @@ public class UserController {
     Book_userDao book_userDao;
     @Autowired
     TeamDao teamDao;
+//    @RequestMapping("/index")
+//    public String goToLogin(){
+//        System.out.println("接收到跳转请求");
+//        return "login";
+//    }
     @PostMapping("/register")
     public Result add (@RequestBody User user)
     {
@@ -67,16 +77,15 @@ public class UserController {
         return result;
     };
     @PostMapping("/login")
-    public Result login (@RequestBody User user, HttpSession httpSession)
-    {
+    public Result login (@RequestBody User user, HttpSession httpSession) throws ParseException {
         Result result;
-        Data data = user.getLastLoginTime();
+        String dateString = user.getLastLoginTime();
         String userName = user.getUserName();
         String password = user.getPassword();
         User loginUser = userDao.selectOne( new LambdaQueryWrapper<User>().eq(User::getUserName,userName));
         Integer userId = loginUser.getId();
         Book_user book_user = book_userDao.selectOne(new LambdaQueryWrapper<Book_user>().eq(Book_user::getUserId,userId));
-        if(loginUser == null)
+        if(userId == null)
         {
              result = new Result("UserNotExist");
         }
@@ -84,9 +93,11 @@ public class UserController {
             Integer chooseBookId = book_user.getBookId();
             result = new Result("loginSucceed",userName,userId,loginUser.getTodayNum(),loginUser.getAllNum(),loginUser.getTodayTime(),loginUser.getAllTime(),loginUser.getTeamId(),chooseBookId);
             httpSession.setAttribute("userId",loginUser.getId());
-            if (data!=loginUser.getLastLoginTime())
+            System.out.println("登录后的session地址是"+httpSession+"其中的userID是"+httpSession.getAttribute("userId"));
+            //今日首次登录
+            if (!dateString.equals(loginUser.getLastLoginTime()))
             {
-                User updateUser= new User(0,null);
+                User updateUser= new User(0,null,dateString);
                 userDao.update(updateUser,new LambdaQueryWrapper<User>().eq(User::getId,loginUser.getId()));
             }
         }

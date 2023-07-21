@@ -25,7 +25,7 @@ public class Result {
     private List<Book> bookList;
     private ReciteWordDate[] reciteNewWordDates;
     private ReciteWordDate[] reciteOneWordDates;
-    private ReciteWordDate[] recitetwoWordDates;
+    private ReciteWordDate[] reciteTwoWordDates;
 
 
     public Result() {
@@ -51,6 +51,6 @@ public class Result {
         this.status = status;
         this.reciteNewWordDates = reciteNewWordDates;
         this.reciteOneWordDates = reciteOneWordDates;
-        this.recitetwoWordDates = recitetwoWordDates;
+        this.reciteTwoWordDates = recitetwoWordDates;
     }
 }

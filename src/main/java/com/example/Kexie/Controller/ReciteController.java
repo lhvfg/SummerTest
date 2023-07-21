@@ -50,7 +50,7 @@ public class ReciteController {
         //进入页面
         if(reciteDate.getRequestType().equals("getWords"))
         {
-            List<Word> newWords = wordDao.selectNewWords(bookId);
+            List<Word> newWords = wordDao.selectNewWords(bookId,userId);
             List<Word> newStarWords = wordDao.selectNewStarWords(userId);
             List<Word> countOneWords = wordDao.selectCountWords(1,userId,bookId);
             List<Word> countOneStarWords = wordDao.selectCountStarWords(1,userId);

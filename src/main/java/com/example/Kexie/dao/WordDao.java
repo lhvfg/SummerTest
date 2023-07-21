@@ -13,17 +13,14 @@ import java.util.List;
 public interface WordDao extends BaseMapper<Word> {
     @Select("SELECT spell FROM word where id=#{id}")
     String selectReciteWordSpell(Integer id);
-    //获取在某本单词书中没背过的单词
-    @Select("SELECT * FROM word w WHERE w.id IN (SELECT bw.word_id FROM book_word bw LEFT JOIN word_user wu ON bw.word_id = wu.word_id WHERE bw.book_id = #{bookId} AND wu.user_id IS NULL)")
-    List<Word> selectNewWords(Integer bookId);
+    //获取某用户在某本单词书中没背过的单词
+    @Select("SELECT * FROM word WHERE id NOT IN (SELECT word_id from book_word where book_id=#{bookId} and word_id in (SELECT word_id from word_user where user_id = #{userId}) );")
+    List<Word> selectNewWords(Integer bookId,Integer userId);
     //查询某用户在某本书中背过特定次数的单词
     @Select("SELECT * FROM word WHERE id IN (SELECT wu.word_id FROM word_user wu WHERE wu.count = #{count} AND wu.user_id = #{userId} AND wu.finish = 0 AND wu.recite = 0 AND wu.word_id IN (SELECT bw.word_id FROM book_word bw WHERE bw.book_id = #{bookId}))")
     List<Word> selectCountWords(Integer count,Integer userId,Integer bookId);
     //在生词本中的新单词
-    @Select("SELECT * FROM word w WHERE w.id IN (" +
-            "    SELECT sb.word_id FROM star_book sb" +
-            "    LEFT JOIN word_user wu ON sb.word_id = wu.word_id" +
-            "    WHERE sb.user_id=#{userId} AND wu.user_id IS NULL)")
+    @Select("SELECT * FROM word WHERE id IN(SELECT word_id from star_book  where user_id=#{userId} and word_id not in (select word_id from word_user where user_id = #{userId}))")
     List<Word> selectNewStarWords(Integer userId);
     //在生词本中背过特定次数的单词
     @Select("SELECT * FROM word WHERE id IN" +

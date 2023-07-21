@@ -105,4 +105,8 @@ class DemoApplicationTests {
         user.setLastLoginTime("2023-07-17");
         userDao.update(user,new LambdaQueryWrapper<User>().eq(User::getId,3));
     }
+    @Test
+    public void pairtext(){
+
+    }
     }

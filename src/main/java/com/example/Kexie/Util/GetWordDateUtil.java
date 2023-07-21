@@ -50,7 +50,7 @@ public class GetWordDateUtil {
                 else if (count == 1)
                     result.setReciteOneWordDates(reciteWordDates[count]);
                 else if (count == 2)
-                    result.setRecitetwoWordDates(reciteWordDates[count]);
+                    result.setReciteTwoWordDates(reciteWordDates[count]);
             }
             return result;
         }

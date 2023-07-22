@@ -2,7 +2,6 @@ package com.example.Kexie.Controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.example.Kexie.Util.DeriveWordUtil;
-import com.example.Kexie.Util.GetWordDateUtil;
 import com.example.Kexie.Util.SynonymousUtil;
 import com.example.Kexie.dao.*;
 import com.example.Kexie.domain.*;
@@ -20,7 +19,8 @@ import java.util.*;
 @Transactional
 public class ReciteController {
     Result result = new Result();
-    ReciteWordDate[][] reciteWordDates = new ReciteWordDate[3][10];
+    //不定长二维数组
+    ArrayList<ArrayList<ReciteWordDate>> reciteWordDates = new ArrayList<>();
     ArrayList<Set<String>> wordSet = new ArrayList<>();
     DeriveWordUtil deriveWordUtil = new DeriveWordUtil();
     SynonymousUtil synonymousUtil = new SynonymousUtil();
@@ -47,6 +47,10 @@ public class ReciteController {
         Integer wordId = reciteDate.getWordId();
         Integer bookId = reciteDate.getBookId();
         LambdaQueryWrapper<Word_user> lqw = new LambdaQueryWrapper<>();
+        for (int i = 0; i < 3; i++) {
+            ArrayList<ReciteWordDate> arrayList = new ArrayList<>();
+            reciteWordDates.add(arrayList);
+        }
         //进入页面
         if(reciteDate.getRequestType().equals("getWords"))
         {
@@ -69,7 +73,7 @@ public class ReciteController {
             // 优先获取生词本中的单词
             getWordDate(countTwoStarWords, userId, 2, 0, countTwoStarWords.size());
             getWordDate(countTwoWords, userId, 2, countTwoStarWords.size(), Math.min(10,countTwoStarWords.size()+countTwoWords.size()));
-            result = new Result("reciteWords",reciteWordDates[0],reciteWordDates[1],reciteWordDates[2]);
+            result = new Result("reciteWords",reciteWordDates.get(0),reciteWordDates.get(1),reciteWordDates.get(2));
         }
         //答对一次
         else if (reciteDate.getRequestType().equals("right"))
@@ -141,27 +145,27 @@ public class ReciteController {
                 if (wordSet.get(count).isEmpty()||(!wordSet.get(count).isEmpty()&&!wordSet.get(count).contains(spell)))
                 {
                     wordSet.get(count).add(spell);
-                    reciteWordDates[count][i] = new ReciteWordDate();
-                    reciteWordDates[count][i].setSpell(spell);
-                    reciteWordDates[count][i].setCount(count);
+                    reciteWordDates.get(count).add(new ReciteWordDate());
+                    reciteWordDates.get(count).get(i).setSpell(spell);
+                    reciteWordDates.get(count).get(i).setCount(count);
                     //例句
                     List<Sentence> sentence = sentenceDao.selectList(new LambdaQueryWrapper<Sentence>().eq(Sentence::getWordId, wordId));
-                    reciteWordDates[count][i].setSentence(sentence);
+                    reciteWordDates.get(count).get(i).setSentence(sentence);
                     //笔记
                     List<Note> notes = noteDao.selectList(new LambdaQueryWrapper<Note>().eq(Note::getWordId, wordId).eq(Note::getUserId, userId));
-                    reciteWordDates[count][i].setNotes(notes);
+                    reciteWordDates.get(count).get(i).setNotes(notes);
                     //释义
                     List<Meaning> meanings = meaningDao.selectList(new LambdaQueryWrapper<Meaning>().eq(Meaning::getWordId, wordId));
                     if (!meanings.isEmpty()) {
-                        reciteWordDates[count][i].setMeaning(meanings);
+                        reciteWordDates.get(count).get(i).setMeaning(meanings);
                         //近义词
                         int finalI = i;
                         meanings.forEach(meaning -> {
-                            synonymousUtil.getSynonymous(reciteWordDates[count][finalI], meaning, meaningDao, wordDao);
+                            synonymousUtil.getSynonymous(reciteWordDates.get(count).get(finalI), meaning, meaningDao, wordDao);
                         });
                     }
                     //派生词
-                    reciteWordDates[count][i] = deriveWordUtil.getDerive(meaningDao, wordDao, reciteWordDates[count][i], spell);
+                    reciteWordDates.get(count).set(i,deriveWordUtil.getDerive(meaningDao, wordDao, reciteWordDates.get(count).get(i), spell));
                 }
             }
         }

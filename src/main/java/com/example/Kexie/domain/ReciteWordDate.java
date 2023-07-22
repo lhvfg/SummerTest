@@ -18,7 +18,7 @@ public class ReciteWordDate {
     private String spell;
     private Integer count;
     private Map<Map<String,String>, Set<String>> Synonymous;//近义词 相同词性且中文释义相同 返回释义->所有的单词拼写
-    private Map<String,List<Meaning>> Derived;//派生词 相似的单词 单词拼写->所有的释义
+    private ArrayList<Map<String,List<Meaning>>> Derived;//派生词 相似的单词 单词拼写->所有的释义
     //例句
     private List<Sentence> sentence;
     //释义数据

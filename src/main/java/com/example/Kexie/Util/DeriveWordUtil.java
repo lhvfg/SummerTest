@@ -50,6 +50,7 @@ public class DeriveWordUtil {
                 derivedMap.put(word.getSpell(),meanings);
             });
         }
+
         reciteWordDate.setDerived(derivedMap);
         return reciteWordDate;
     }

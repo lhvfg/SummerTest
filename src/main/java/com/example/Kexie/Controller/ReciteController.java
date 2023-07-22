@@ -47,15 +47,21 @@ public class ReciteController {
         Integer wordId = reciteDate.getWordId();
         Integer bookId = reciteDate.getBookId();
         LambdaQueryWrapper<Word_user> lqw = new LambdaQueryWrapper<>();
-        for (int i = 0; i < 3; i++) {
-            ArrayList<ReciteWordDate> arrayList = new ArrayList<>();
-            reciteWordDates.add(arrayList);
-        }
         //进入页面
         if(reciteDate.getRequestType().equals("getWords"))
         {
+            wordSet = new ArrayList<>();
+            for (int i = 0; i < 3; i++) {
+                ArrayList<ReciteWordDate> arrayList = new ArrayList<>();
+                if (reciteWordDates.size()==i)
+                    reciteWordDates.add(arrayList);
+                else
+                    reciteWordDates.set(i,arrayList);
+            }
             List<Word> newWords = wordDao.selectNewWords(bookId,userId);
+            System.out.println(newWords);
             List<Word> newStarWords = wordDao.selectNewStarWords(userId);
+            System.out.println(newStarWords);
             List<Word> countOneWords = wordDao.selectCountWords(1,userId,bookId);
             List<Word> countOneStarWords = wordDao.selectCountStarWords(1,userId);
             List<Word> countTwoWords = wordDao.selectCountWords(2,userId,bookId);
@@ -65,15 +71,16 @@ public class ReciteController {
                 wordSet.add(new HashSet<>());
             }
             // 优先获取生词本中的单词
-            getWordDate(newStarWords, userId, 0, 0, newStarWords.size());
-            getWordDate(newWords, userId, 0, newStarWords.size(), Math.min(10,newWords.size()+newStarWords.size()));
+            getWordDate(newStarWords, userId, 0, 0, newStarWords.size(),true);
+            getWordDate(newWords, userId, 0, newStarWords.size(), Math.min(10,newWords.size()+newStarWords.size()),false);
             // 优先获取生词本中的单词
-            getWordDate(countOneStarWords, userId, 1, 0, countOneStarWords.size());
-            getWordDate(countOneWords, userId, 1, countOneStarWords.size(), Math.min(10,countOneStarWords.size()+countOneWords.size()));
+            getWordDate(countOneStarWords, userId, 1, 0, countOneStarWords.size(),true);
+            getWordDate(countOneWords, userId, 1, countOneStarWords.size(), Math.min(10,countOneStarWords.size()+countOneWords.size()),false);
             // 优先获取生词本中的单词
-            getWordDate(countTwoStarWords, userId, 2, 0, countTwoStarWords.size());
-            getWordDate(countTwoWords, userId, 2, countTwoStarWords.size(), Math.min(10,countTwoStarWords.size()+countTwoWords.size()));
+            getWordDate(countTwoStarWords, userId, 2, 0, countTwoStarWords.size(),true);
+            getWordDate(countTwoWords, userId, 2, countTwoStarWords.size(), Math.min(10,countTwoStarWords.size()+countTwoWords.size()),false);
             result = new Result("reciteWords",reciteWordDates.get(0),reciteWordDates.get(1),reciteWordDates.get(2));
+
         }
         //答对一次
         else if (reciteDate.getRequestType().equals("right"))
@@ -118,14 +125,14 @@ public class ReciteController {
         //加入生词本
         else if(reciteDate.getRequestType().equals("addStar"))
         {
-            StarBook starBook = new StarBook(userId,wordId);
+            StarBook starBook = new StarBook(wordId,userId);
             if (starBookDao.insert(starBook)!=0)
             {
                 result.setStatus("addStar");
             }
         }
         //去除生词
-        else if(reciteDate.getRequestType().equals("deletestar"))
+        else if(reciteDate.getRequestType().equals("deleteStar"))
         {
             if (starBookDao.delete(new LambdaQueryWrapper<StarBook>().eq(StarBook::getUser_id,userId).eq(StarBook::getWord_id,wordId))!=0)
             {
@@ -136,18 +143,23 @@ public class ReciteController {
     }
 
     //整合单词显示数据
-    private void getWordDate(List<Word> words,Integer userId,Integer count,Integer beg,Integer end)
+    private void getWordDate(List<Word> words,Integer userId,Integer count,Integer beg,Integer end,boolean star)
     {
         if (words.size()!=0) {
+            System.out.println(words.size());
             for (int i = beg; i < end; i++) {
                 String spell = words.get(i-beg).getSpell();
                 Integer wordId = words.get(i-beg).getId();
                 if (wordSet.get(count).isEmpty()||(!wordSet.get(count).isEmpty()&&!wordSet.get(count).contains(spell)))
                 {
+                    System.out.println("添加单词"+spell);
                     wordSet.get(count).add(spell);
                     reciteWordDates.get(count).add(new ReciteWordDate());
+                    System.out.println("添加数据后recite长度为"+reciteWordDates.get(count).size());
                     reciteWordDates.get(count).get(i).setSpell(spell);
                     reciteWordDates.get(count).get(i).setCount(count);
+                    reciteWordDates.get(count).get(i).setStar(star);
+                    reciteWordDates.get(count).get(i).setWordId(wordId);
                     //例句
                     List<Sentence> sentence = sentenceDao.selectList(new LambdaQueryWrapper<Sentence>().eq(Sentence::getWordId, wordId));
                     reciteWordDates.get(count).get(i).setSentence(sentence);
@@ -166,8 +178,10 @@ public class ReciteController {
                     }
                     //派生词
                     reciteWordDates.get(count).set(i,deriveWordUtil.getDerive(meaningDao, wordDao, reciteWordDates.get(count).get(i), spell));
+                    System.out.println("此时i的值为"+i);
                 }
             }
+            System.out.println("count"+count+star+"生词结束后reciteWordDate是"+reciteWordDates.get(count));
         }
     }
 }

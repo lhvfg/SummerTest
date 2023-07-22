@@ -5,12 +5,11 @@ import com.example.Kexie.dao.MeaningDao;
 import com.example.Kexie.dao.WordDao;
 import com.example.Kexie.domain.BasicPojo.Meaning;
 import com.example.Kexie.domain.BasicPojo.Word;
+import com.example.Kexie.domain.Derive;
 import com.example.Kexie.domain.ReciteWordDate;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Transactional
 public class DeriveWordUtil {
@@ -42,16 +41,17 @@ public class DeriveWordUtil {
             //copySpell收尾截去一个字符迭代
             copySpell = copySpell.substring(1,copySpell.length()-1);
         }
-        Map<String,List<Meaning>> derivedMap = new HashMap<>();
+        Derive[] derives = new Derive[derviedWords.size()];
         if (!derviedWords.isEmpty())
         {
+            final int[] i = {0};
             derviedWords.forEach(word -> {
                 List<Meaning> meanings= meaningDao.selectList(new LambdaQueryWrapper<Meaning>().eq(Meaning::getWordId,word.getId()));
-                derivedMap.put(word.getSpell(),meanings);
+                derives[i[0]] = new Derive(word.getSpell(),meanings);
+                i[0]++;
             });
         }
-
-        reciteWordDate.setDerived(derivedMap);
+        reciteWordDate.setDerived(derives);
         return reciteWordDate;
     }
 }

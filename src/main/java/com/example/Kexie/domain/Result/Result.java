@@ -1,7 +1,8 @@
-package com.example.Kexie.domain;
+package com.example.Kexie.domain.Result;
 
 import com.example.Kexie.domain.BasicPojo.Book;
 import com.example.Kexie.domain.BasicPojo.Word;
+import com.example.Kexie.domain.ReciteWordDate;
 import lombok.Data;
 
 import java.sql.Time;

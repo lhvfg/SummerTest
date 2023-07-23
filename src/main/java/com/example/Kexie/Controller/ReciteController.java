@@ -6,7 +6,7 @@ import com.example.Kexie.Util.SynonymousUtil;
 import com.example.Kexie.dao.*;
 import com.example.Kexie.domain.*;
 import com.example.Kexie.domain.BasicPojo.*;
-import com.example.Kexie.domain.Result;
+import com.example.Kexie.domain.Result.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;

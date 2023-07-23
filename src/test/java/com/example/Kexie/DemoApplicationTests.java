@@ -3,13 +3,10 @@ package com.example.Kexie;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.example.Kexie.dao.BookDao;
-import com.example.Kexie.dao.UserDao;
-import com.example.Kexie.dao.WordDao;
-import com.example.Kexie.dao.Word_userDao;
+import com.example.Kexie.dao.*;
 import com.example.Kexie.domain.BasicPojo.Book;
 import com.example.Kexie.domain.BasicPojo.Word_user;
-import com.example.Kexie.domain.Result;
+import com.example.Kexie.domain.Result.Result;
 import com.example.Kexie.domain.BasicPojo.User;
 
 import com.example.Kexie.domain.BasicPojo.Word;
@@ -19,10 +16,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Set;
 
 @SpringBootTest
 @RestController
@@ -36,6 +29,8 @@ class DemoApplicationTests {
     private WordDao wordDao;
     @Autowired
     private Word_userDao word_userDao;
+    @Autowired
+    private Book_wordDao book_wordDao;
     @Test
     public void PageSelect(){
         IPage<Word> page=new Page<>(1,2);
@@ -107,6 +102,6 @@ class DemoApplicationTests {
     }
     @Test
     public void pairtext(){
-
+        System.out.println(book_wordDao);
     }
     }

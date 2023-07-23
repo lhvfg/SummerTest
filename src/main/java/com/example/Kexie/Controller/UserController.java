@@ -6,10 +6,9 @@ import com.example.Kexie.dao.TeamDao;
 import com.example.Kexie.dao.UserDao;
 import com.example.Kexie.domain.*;
 import com.example.Kexie.domain.BasicPojo.Book_user;
-import com.example.Kexie.domain.Result;
+import com.example.Kexie.domain.Result.Result;
 import com.example.Kexie.domain.BasicPojo.User;
 import jakarta.servlet.http.HttpSession;
-import lombok.Data;
 import net.jodah.expiringmap.ExpirationPolicy;
 import net.jodah.expiringmap.ExpiringMap;
 import org.apache.commons.mail.EmailException;
@@ -19,10 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 

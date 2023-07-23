@@ -10,7 +10,7 @@
 //import com.example.Kexie.domain.BasicPojo.Sentence;
 //import com.example.Kexie.domain.BasicPojo.Word;
 //import com.example.Kexie.domain.ReciteWordDate;
-//import com.example.Kexie.domain.Result;
+//import com.example.Kexie.domain.Result.Result;
 //
 //import java.util.ArrayList;
 //import java.util.List;

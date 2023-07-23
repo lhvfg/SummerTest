@@ -8,7 +8,8 @@ import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.annotation.Import;
 
 @SpringBootApplication
-@ServletComponentScan("com.example.Kexie.filter")
+@ServletComponentScan
+//        ("com.example.Kexie.filter")
 @MapperScan("com.example.Kexie.dao")
 public class DemoApplication {
 

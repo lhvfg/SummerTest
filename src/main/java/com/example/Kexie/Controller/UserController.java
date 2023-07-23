@@ -17,10 +17,7 @@ import org.apache.commons.mail.HtmlEmail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -42,11 +39,29 @@ public class UserController {
     Book_userDao book_userDao;
     @Autowired
     TeamDao teamDao;
-//    @RequestMapping("/index")
-//    public String goToLogin(){
-//        System.out.println("接收到跳转请求");
-//        return "login";
-//    }
+    //登录拦截
+    @RequestMapping("/index")
+    public Result goToLogin(){
+        System.out.println("登录拦截");
+        Result result = new Result("block");
+        return result;
+    }
+    //清除Session
+    @GetMapping("/clearSession")
+    public Result clear(HttpSession httpSession)
+    {
+        Result result = new Result();
+        System.out.println(httpSession.getAttribute("userId"));
+        if (httpSession.getAttribute("userId")!=null)
+        {
+            result.setStatus("clear");
+            httpSession.setAttribute("userId",null);
+        }
+        else {
+            result.setStatus("new");
+        }
+        return result;
+    }
     @PostMapping("/register")
     public Result add (@RequestBody User user)
     {
@@ -90,7 +105,9 @@ public class UserController {
              result = new Result("UserNotExist");
         }
         else if (loginUser.getPassword().equals(DigestUtils.md5DigestAsHex(password.getBytes()))){
-            Integer chooseBookId = book_user.getBookId();
+            Integer chooseBookId = null;
+            if(book_user != null)
+                 chooseBookId = book_user.getBookId();
             result = new Result("loginSucceed",userName,userId,loginUser.getTodayNum(),loginUser.getAllNum(),loginUser.getTodayTime(),loginUser.getAllTime(),loginUser.getTeamId(),chooseBookId);
             httpSession.setAttribute("userId",loginUser.getId());
             System.out.println("登录后的session地址是"+httpSession+"其中的userID是"+httpSession.getAttribute("userId"));

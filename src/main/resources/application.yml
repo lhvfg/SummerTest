@@ -11,7 +11,7 @@ spring:
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true
-    #log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   global-config:
       banner: off # 关闭mybatisplus启动图标
 
@@ -23,6 +23,6 @@ server:
       charset: UTF-8
       enabled: true
       force: true
-  port: 8080
+  port: 8010
 
 

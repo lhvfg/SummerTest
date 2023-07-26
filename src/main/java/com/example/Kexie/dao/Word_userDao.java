@@ -16,4 +16,10 @@ public interface Word_userDao extends BaseMapper<Word_user> {
     //背完一个
     @Update("UPDATE word_user set count = 0 , recite = 1 where word_id = #{wordId} AND user_id = #{userId)")
     boolean wordRecite(Integer wordId,Integer userId);
+    //标熟
+    @Update("UPDATE word_user set finish = 1 where word_id = #{wordId} and user_id = #{userId}")
+    boolean deleteWord(Integer wordId,Integer userId);
+    //取消标熟
+    @Update("UPDATE word_user set finish = 0 where word_id = #{wordId} and user_id = #{userId}")
+    boolean undoDelete(Integer wordId,Integer userId);
 }

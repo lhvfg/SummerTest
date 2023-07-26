@@ -17,7 +17,7 @@ import java.util.*;
 
 @RestController
 @Transactional
-public class ReciteController {
+public class LearnController {
     Result result = new Result();
     //不定长二维数组
     ArrayList<ArrayList<ReciteWordDate>> reciteWordDates = new ArrayList<>();
@@ -40,6 +40,8 @@ public class ReciteController {
     UserDao userDao;
     @Autowired
     StarBookDao starBookDao;
+    @Autowired
+    Book_wordDao book_wordDao;
     @PostMapping("/recite")
     public Result Recitewords(@RequestBody ReciteFrontDate reciteDate)
     {
@@ -122,6 +124,14 @@ public class ReciteController {
                 result.setStatus("deleteSuccess");
             }
         }
+        //取消标熟
+        else if(reciteDate.getRequestType().equals("undoDelete"))
+        {
+            if (word_userDao.undoDelete(wordId,userId))
+            {
+                result.setStatus("undoDeleteSuccess");
+            }
+        }
         //加入生词本
         else if(reciteDate.getRequestType().equals("addStar"))
         {
@@ -138,6 +148,12 @@ public class ReciteController {
             {
                 result.setStatus("deleteStar");
             }
+        }
+        //获取单词数
+        else if(reciteDate.getRequestType().equals("getNum"))
+        {
+           result.setWordNum(book_wordDao.getLearnNum(bookId,userId));
+           result.setStatus("learnNumSuccess");
         }
         return result;
     }

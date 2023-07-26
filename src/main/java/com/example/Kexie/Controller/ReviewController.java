@@ -1,39 +1,42 @@
 package com.example.Kexie.Controller;
 
 import com.example.Kexie.Util.GetNumUtil;
+import com.example.Kexie.dao.Book_userDao;
 import com.example.Kexie.dao.Book_wordDao;
-import com.example.Kexie.dao.WordDao;
-import com.example.Kexie.domain.Result.ReviewResult;
-import com.example.Kexie.domain.ReviewFrontDate;
+import com.example.Kexie.dao.TeamDao;
+import com.example.Kexie.dao.UserDao;
+import com.example.Kexie.domain.*;
+import com.example.Kexie.domain.Result.ReciteResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Transactional
 public class ReviewController {
-    ReviewResult result = new ReviewResult();
+
+    @Autowired
+    UserDao userDao;
+    @Autowired
+    Book_userDao book_userDao;
+    @Autowired
+    TeamDao teamDao;
     @Autowired
     Book_wordDao book_wordDao;
-    @Autowired
-    WordDao wordDao;
     @PostMapping("/review")
-    private ReviewResult review(@RequestBody ReviewFrontDate reviewFrontDate)
+    public ReciteResult review (@RequestBody ReviewFrontDate reviewDate)
     {
-        System.out.println(book_wordDao);
-        System.out.println(wordDao);
-        Integer bookId = reviewFrontDate.getBookId();
-        Integer userId = reviewFrontDate.getUserId();
-        if (reviewFrontDate.getRequestType().equals("getNum"))
+        ReciteResult result = new ReciteResult();
+        Integer bookId = reviewDate.getBookId();
+        Integer userId = reviewDate.getUserId();
+        if (reviewDate.getRequestType().equals("getNum"))
         {
             GetNumUtil getNumUtil = new GetNumUtil();
             result.setWordNum(getNum("reviewNum",bookId,userId));
             result.setStatus("reciteNumSuccess");
         }
         return result;
-    }
+    };
     private Integer getNum(String type, Integer bookId, Integer userId)
     {
         Integer ans=0;
@@ -48,3 +51,4 @@ public class ReviewController {
         return ans;
     }
 }
+

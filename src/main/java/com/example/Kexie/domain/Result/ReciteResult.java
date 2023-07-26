@@ -3,7 +3,7 @@ package com.example.Kexie.domain.Result;
 import lombok.Data;
 
 @Data
-public class ReviewResult {
+public class ReciteResult {
     private String status;
     private Integer wordNum;
 }

@@ -28,7 +28,7 @@ public class Result {
     private ArrayList<ReciteWordDate> reciteNewWordDates;
     private ArrayList<ReciteWordDate> reciteOneWordDates;
     private ArrayList<ReciteWordDate> reciteTwoWordDates;
-
+    private Integer wordNum;
 
     public Result() {
     }

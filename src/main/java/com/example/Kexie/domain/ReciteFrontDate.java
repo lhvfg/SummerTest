@@ -8,6 +8,7 @@ public class ReciteFrontDate {
     private String RequestType;
     private Integer userId;
     private Integer wordId;
+    private Integer count;
     //背了几个
     private Integer number;
     //学了多少秒

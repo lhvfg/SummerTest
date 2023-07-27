@@ -62,7 +62,7 @@ public class LearnController {
             }
             List<Word> newWords = wordDao.selectNewWords(bookId,userId);
             System.out.println(newWords);
-            List<Word> newStarWords = wordDao.selectNewStarWords(userId);
+            List<Word> newStarWords = wordDao.selectNewStarWords(userId,bookId);
             System.out.println(newStarWords);
             List<Word> countOneWords = wordDao.selectCountWords(1,userId,bookId);
             List<Word> countOneStarWords = wordDao.selectCountStarWords(1,userId);
@@ -87,12 +87,17 @@ public class LearnController {
         //答对一次
         else if (reciteDate.getRequestType().equals("right"))
         {
+             //如果是在word_user中有数据的单词
              if (word_userDao.countAdd(wordId,userId))
              {
                  result.setStatus("countAdd");
              }
+             //如果是没有数据的单词，那么就需要添加数据，并且这种情况只可能是新单词count = 0变成1的情况，所以也不需要返回指定的count
+             else if(word_userDao.insertData(userId,wordId)){
+                 result.setStatus("countAdd");
+             }
         }
-        //完成背诵
+        //完成背诵，recite设置为1，count设置为3
         else if(reciteDate.getRequestType().equals("wordRecite"))
         {
             if (word_userDao.wordRecite(wordId,userId))
@@ -100,7 +105,7 @@ public class LearnController {
                 result.setStatus("wordRecite");
             }
         }
-        //答错
+        //答错(如果是新单词答错，前端不会发请求给后端，只有count != 0时才会给后端发送请求，从而更改count的值)
         else if (reciteDate.getRequestType().equals("wrong"))
         {
             if (word_userDao.countClear(wordId,userId))
@@ -116,18 +121,23 @@ public class LearnController {
                 result.setStatus("timeNumChanged");
             }
         }
-        //标熟
+        //标熟，把finish设置为1，如果是新单词没有这个数据那么会添加数据
         else if(reciteDate.getRequestType().equals("delete"))
         {
-            if (word_userDao.delete(new LambdaQueryWrapper<Word_user>().eq(Word_user::getUserId,userId).eq(Word_user::getWordId,wordId))!=0)
+
+            if (word_userDao.deleteWord(wordId,userId))
+            {
+                result.setStatus("deleteSuccess");
+            }
+            else if(word_userDao.deleteNewWord(wordId,userId))
             {
                 result.setStatus("deleteSuccess");
             }
         }
-        //取消标熟
+        //取消标熟,不用担心会没有数据，应为如果是新单词，一定要先标熟，而标熟的时候就会添加数据了
         else if(reciteDate.getRequestType().equals("undoDelete"))
         {
-            if (word_userDao.undoDelete(wordId,userId))
+               if (word_userDao.undoDelete(wordId,userId))
             {
                 result.setStatus("undoDeleteSuccess");
             }

@@ -19,4 +19,8 @@ private String spell;
 
     public Word() {
     }
+
+    public Word(String spell) {
+        this.spell = spell;
+    }
 }

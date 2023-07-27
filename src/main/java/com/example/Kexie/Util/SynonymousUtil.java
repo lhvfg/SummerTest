@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.example.Kexie.dao.MeaningDao;
 import com.example.Kexie.dao.WordDao;
 import com.example.Kexie.domain.BasicPojo.Meaning;
-import com.example.Kexie.domain.ReciteWordDate;
+import com.example.Kexie.domain.ReciteWordData;
 import com.example.Kexie.domain.Synonymous;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,7 +12,7 @@ import java.util.*;
 
 @Transactional
 public class SynonymousUtil {
-    public void getSynonymous(ReciteWordDate reciteWordDate, Meaning wordMean, MeaningDao meaningDao, WordDao wordDao){
+    public void getSynonymous(ReciteWordData reciteWordDate, Meaning wordMean, MeaningDao meaningDao, WordDao wordDao){
         //用中英文逗号和分号符号分割字符串
         ArrayList<Synonymous> synonymous = new ArrayList<>();
         for (String wordMeanContent : wordMean.getContent().split("[,;，；]"))

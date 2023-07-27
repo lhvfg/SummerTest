@@ -6,7 +6,7 @@ import com.example.Kexie.dao.WordDao;
 import com.example.Kexie.domain.BasicPojo.Meaning;
 import com.example.Kexie.domain.BasicPojo.Word;
 import com.example.Kexie.domain.Derive;
-import com.example.Kexie.domain.ReciteWordDate;
+import com.example.Kexie.domain.ReciteWordData;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -14,7 +14,7 @@ import java.util.List;
 @Transactional
 public class DeriveWordUtil {
     //获取派生词,参数是拼写和要处理后返回的ReciteWordDate
-    public ReciteWordDate getDerive(MeaningDao meaningDao,WordDao wordDao, ReciteWordDate reciteWordDate, String spell){
+    public ReciteWordData getDerive(MeaningDao meaningDao, WordDao wordDao, ReciteWordData reciteWordDate, String spell){
         //获取派生词，头尾不断截取字母，直达获取了4个及以上的形近词
         List<Word> derviedWords = wordDao.selectList(new LambdaQueryWrapper<Word>().like(Word::getSpell, spell));
         String copySpell = spell;

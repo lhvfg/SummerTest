@@ -33,7 +33,7 @@ public class WordController {
     Word_userDao word_userDao;
 
     @PostMapping("/addword")//添加单词
-    public Result addWordRequest(@RequestBody WordDate wordDate) {
+    public Result addWordRequest(@RequestBody WordData wordDate) {
         Result result = new Result();
         QueryWrapper<Word> qw = new QueryWrapper<>();
         LambdaQueryWrapper<Word> lqw = new LambdaQueryWrapper<>();

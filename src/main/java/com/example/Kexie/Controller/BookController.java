@@ -32,7 +32,7 @@ public class BookController {
     @Autowired
     Book_userDao book_userDao;
     @PostMapping("/addBook")
-    public Result addBook(@RequestBody BookDate bookDate)
+    public Result addBook(@RequestBody BookData bookDate)
     {
         Result result = new Result();
         QueryWrapper<Book> qw = new QueryWrapper<>();
@@ -83,7 +83,7 @@ public class BookController {
         return result;
     }
     @PostMapping("/chooseBook")
-    public Result chooseBook(@RequestBody  BookDate bookDate, HttpSession httpSession)
+    public Result chooseBook(@RequestBody BookData bookDate, HttpSession httpSession)
     {
         //System.out.println(httpSession+"地址中的userId为"+httpSession.getAttribute("userId"));
         Result result = new Result();

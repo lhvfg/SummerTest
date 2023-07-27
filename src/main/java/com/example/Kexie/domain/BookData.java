@@ -3,7 +3,7 @@ package com.example.Kexie.domain;
 import lombok.Data;
 
 @Data
-public class BookDate {
+public class BookData {
     private Integer id      ;
     private String requestType;
     private String bookName    ;

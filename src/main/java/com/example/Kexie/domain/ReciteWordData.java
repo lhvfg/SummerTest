@@ -14,7 +14,7 @@ import java.util.Set;
 
 @Data
 //封装背诵单词要显示出来的数据
-public class ReciteWordDate {
+public class ReciteWordData {
     private Integer wordId;
     private String spell;
     private Integer count;

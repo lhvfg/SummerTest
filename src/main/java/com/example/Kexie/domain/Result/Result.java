@@ -2,13 +2,12 @@ package com.example.Kexie.domain.Result;
 
 import com.example.Kexie.domain.BasicPojo.Book;
 import com.example.Kexie.domain.BasicPojo.Word;
-import com.example.Kexie.domain.ReciteWordDate;
+import com.example.Kexie.domain.ReciteWordData;
 import lombok.Data;
 
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Data
 public class Result {
@@ -25,9 +24,9 @@ public class Result {
     private long pages;
     private List<Word> wordList;
     private List<Book> bookList;
-    private ArrayList<ReciteWordDate> reciteNewWordDates;
-    private ArrayList<ReciteWordDate> reciteOneWordDates;
-    private ArrayList<ReciteWordDate> reciteTwoWordDates;
+    private ArrayList<ReciteWordData> reciteNewWordDates;
+    private ArrayList<ReciteWordData> reciteOneWordDates;
+    private ArrayList<ReciteWordData> reciteTwoWordDates;
     private Integer wordNum;
 
     public Result() {
@@ -49,7 +48,7 @@ public class Result {
         this.status = status;
     }
 
-    public Result(String status, ArrayList<ReciteWordDate> reciteNewWordDates, ArrayList<ReciteWordDate> reciteOneWordDates, ArrayList<ReciteWordDate> reciteTwoWordDates) {
+    public Result(String status, ArrayList<ReciteWordData> reciteNewWordDates, ArrayList<ReciteWordData> reciteOneWordDates, ArrayList<ReciteWordData> reciteTwoWordDates) {
         this.status = status;
         this.reciteNewWordDates = reciteNewWordDates;
         this.reciteOneWordDates = reciteOneWordDates;

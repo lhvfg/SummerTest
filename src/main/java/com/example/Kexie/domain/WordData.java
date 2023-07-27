@@ -6,7 +6,7 @@ import java.sql.Time;
 
 @Data
 //添加单个单词时的单词数据
-public class WordDate {
+public class WordData {
     private String requestType;
 
     private String spell;

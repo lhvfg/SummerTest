@@ -11,4 +11,13 @@ private Integer id;
 private Integer wordId;
 private String content;
 private String contentMean;
+
+    public Sentence() {
+    }
+
+    public Sentence(Integer wordId, String content, String contentMean) {
+        this.wordId = wordId;
+        this.content = content;
+        this.contentMean = contentMean;
+    }
 }

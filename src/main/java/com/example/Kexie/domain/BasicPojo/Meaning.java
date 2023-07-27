@@ -12,5 +12,12 @@ public class Meaning {
     private String content;
     private String function;
 
+    public Meaning() {
+    }
 
+    public Meaning(Integer wordId, String content, String function) {
+        this.wordId = wordId;
+        this.content = content;
+        this.function = function;
+    }
 }

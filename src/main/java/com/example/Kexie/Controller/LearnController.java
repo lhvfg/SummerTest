@@ -20,7 +20,7 @@ import java.util.*;
 public class LearnController {
     Result result = new Result();
     //不定长二维数组
-    ArrayList<ArrayList<ReciteWordDate>> reciteWordDates = new ArrayList<>();
+    ArrayList<ArrayList<ReciteWordData>> reciteWordDates = new ArrayList<>();
     ArrayList<Set<String>> wordSet = new ArrayList<>();
     DeriveWordUtil deriveWordUtil = new DeriveWordUtil();
     SynonymousUtil synonymousUtil = new SynonymousUtil();
@@ -43,7 +43,7 @@ public class LearnController {
     @Autowired
     Book_wordDao book_wordDao;
     @PostMapping("/recite")
-    public Result Recitewords(@RequestBody ReciteFrontDate reciteDate)
+    public Result Recitewords(@RequestBody ReciteFrontData reciteDate)
     {
         Integer userId = reciteDate.getUserId();
         Integer wordId = reciteDate.getWordId();
@@ -54,7 +54,7 @@ public class LearnController {
         {
             wordSet = new ArrayList<>();
             for (int i = 0; i < 3; i++) {
-                ArrayList<ReciteWordDate> arrayList = new ArrayList<>();
+                ArrayList<ReciteWordData> arrayList = new ArrayList<>();
                 if (reciteWordDates.size()==i)
                     reciteWordDates.add(arrayList);
                 else
@@ -180,7 +180,7 @@ public class LearnController {
                 {
                     System.out.println("添加单词"+spell);
                     wordSet.get(count).add(spell);
-                    reciteWordDates.get(count).add(new ReciteWordDate());
+                    reciteWordDates.get(count).add(new ReciteWordData());
                     System.out.println("添加数据后recite长度为"+reciteWordDates.get(count).size());
                     reciteWordDates.get(count).get(i).setSpell(spell);
                     reciteWordDates.get(count).get(i).setCount(count);

@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 //获取前端数据
-public class ReciteFrontDate {
+public class ReciteFrontData {
     private String RequestType;
     private Integer userId;
     private Integer wordId;

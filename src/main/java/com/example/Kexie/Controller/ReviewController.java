@@ -24,7 +24,7 @@ public class ReviewController {
     @Autowired
     Book_wordDao book_wordDao;
     @PostMapping("/review")
-    public ReciteResult review (@RequestBody ReviewFrontDate reviewDate)
+    public ReciteResult review (@RequestBody ReviewFrontData reviewDate)
     {
         ReciteResult result = new ReciteResult();
         Integer bookId = reviewDate.getBookId();

@@ -8,10 +8,13 @@ import com.example.Kexie.domain.BasicPojo.*;
 import com.example.Kexie.domain.Result.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
 
 @RestController
@@ -113,6 +116,67 @@ public class WordController {
         }
         return result;
     }
-
+    @PostMapping("/upload")
+    //public Result upload(@RequestBody FileData fileData) throws IOException {
+    public Result upload(@RequestPart("file") MultipartFile file, @RequestParam("bookId[]") Integer[] bookIds) throws IOException {
+        Result result = new Result();
+        //InputStream inputStream = fileData.getFile().getInputStream();
+        InputStream inputStream = file.getInputStream();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        Integer wordId = null;
+        String line = reader.readLine();
+        while (line!=null)
+        {
+            for (int i = 0; i < 4 && line != null; i++, line = reader.readLine()) {
+                System.out.println(line);
+                if (i == 0) {
+                    System.out.println("111" + line);
+                    Word word = new Word(line);
+                    wordId = wordDao.selectWordId(line);
+                    if(wordId == null)
+                    {
+                        wordDao.insert(word);
+                        wordId = wordDao.selectWordId(line);
+                    }
+                    for (Integer bookId : bookIds) {
+                        //如果这本书里没有
+                        if (book_wordDao.selectOne(new LambdaQueryWrapper<Book_word>().eq(Book_word::getWord_id,wordId).eq(Book_word::getBook_id,bookId)) == null)
+                        {
+                            book_wordDao.insert(new Book_word(wordId,bookId));
+                        }
+                    }
+                } else if (i == 1) {
+                    String[] mean = line.split("。");
+                    for (String m : mean) {
+                        String[] detail = m.split(" ");
+                        System.out.println(detail[0]);
+                        String function = detail[0];
+                        System.out.println(detail[1]);
+                        String content = detail[1];
+                        Meaning meaning = new Meaning(wordId, content, function);
+                        LambdaQueryWrapper<Meaning> lqw = new LambdaQueryWrapper<Meaning>().eq(Meaning::getWordId,wordId).eq(Meaning::getFunction,function);
+                        if(meaningDao.selectOne(lqw)==null)
+                        meaningDao.insert(meaning);
+                        else{
+                            meaningDao.update(meaning,lqw);
+                        }
+                    }
+                } else if (i == 2) {
+                    String sentence = line;
+                    line = reader.readLine();i++;
+                    String sentenceMean = line;
+                    Sentence s = new Sentence(wordId, sentence, sentenceMean);
+                    LambdaQueryWrapper<Sentence> lqw = new LambdaQueryWrapper<Sentence>().eq(Sentence::getWordId,wordId).eq(Sentence::getContent,sentence);
+                    if(sentenceDao.selectOne(lqw)==null)
+                        sentenceDao.insert(s);
+                    else
+                        sentenceDao.update(s,lqw);
+                }
+            }
+        }
+        reader.close();
+        result.setStatus("uploadSuccess");
+        return result;
+    }
 }
 

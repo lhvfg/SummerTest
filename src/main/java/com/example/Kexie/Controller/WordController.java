@@ -128,6 +128,7 @@ public class WordController {
         while (line!=null)
         {
             for (int i = 0; i < 4 && line != null; i++, line = reader.readLine()) {
+                line = line.trim();
                 System.out.println(line);
                 if (i == 0) {
                     System.out.println("111" + line);
@@ -146,8 +147,10 @@ public class WordController {
                         }
                     }
                 } else if (i == 1) {
+                    // 句号分隔不同释义
                     String[] mean = line.split("。");
                     for (String m : mean) {
+                        //逗号分隔词性和释义
                         String[] detail = m.split(" ");
                         System.out.println(detail[0]);
                         String function = detail[0];
@@ -163,8 +166,9 @@ public class WordController {
                     }
                 } else if (i == 2) {
                     String sentence = line;
-                    line = reader.readLine();i++;
+                    line = reader.readLine().trim();i++;
                     String sentenceMean = line;
+                    System.out.println(sentenceMean);
                     Sentence s = new Sentence(wordId, sentence, sentenceMean);
                     LambdaQueryWrapper<Sentence> lqw = new LambdaQueryWrapper<Sentence>().eq(Sentence::getWordId,wordId).eq(Sentence::getContent,sentence);
                     if(sentenceDao.selectOne(lqw)==null)

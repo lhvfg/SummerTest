@@ -18,13 +18,13 @@ public interface WordDao extends BaseMapper<Word> {
     @Select("SELECT id FROM word where spell=#{spell}")
     Integer selectWordId(String spell);
     //获取某用户在某本单词书中没背过的单词但又不是生词
-    @Select("SELECT * FROM word WHERE (id NOT IN (SELECT word_id from book_word where book_id=#{bookId} and word_id in (SELECT word_id from word_user where user_id = #{userId})) or id IN (SELECT wu.word_id FROM word_user wu WHERE wu.count = 0 AND wu.user_id = #{userId} AND wu.finish = 0 AND wu.recite = 0 AND wu.word_id IN (SELECT bw.word_id FROM book_word bw WHERE bw.book_id = #{bookId})) )and id not in (select word_id from star_book where user_id = #{userId})")
+    @Select("SELECT * FROM word WHERE (id IN (SELECT word_id from book_word where book_id=#{bookId} and word_id not in (SELECT word_id from word_user where user_id = #{userId} and count != 0)) and id not in (select word_id from star_book where user_id = #{userId}))")
     List<Word> selectNewWords(Integer bookId,Integer userId);
     //查询某用户在某本书中背过特定次数的单词
     @Select("SELECT * FROM word WHERE id IN (SELECT wu.word_id FROM word_user wu WHERE wu.count = #{count} AND wu.user_id = #{userId} AND wu.finish = 0 AND wu.recite = 0 AND wu.word_id IN (SELECT bw.word_id FROM book_word bw WHERE bw.book_id = #{bookId}))and id not in (select word_id from star_book where user_id = #{userId})")
     List<Word> selectCountWords(Integer count,Integer userId,Integer bookId);
     //在生词本中的新单词
-    @Select("SELECT * FROM word WHERE id IN(SELECT word_id from star_book  where user_id=#{userId} and (word_id not in (select word_id from word_user where user_id = #{userId}) or word_id in (SELECT wu.word_id FROM word_user wu WHERE wu.count = 0 AND wu.user_id = #{userId} AND wu.finish = 0 AND wu.recite = 0 AND wu.word_id IN (SELECT bw.word_id FROM book_word bw WHERE bw.book_id = #{bookId}))) )")
+    @Select("SELECT * FROM word WHERE id IN(SELECT word_id from star_book where user_id=#{userId} and (word_id not in (select word_id from word_user where user_id = #{userId} and count != 0) ))")
     List<Word> selectNewStarWords(Integer userId,Integer bookId);
     //在生词本中背过特定次数的单词
     @Select("SELECT * FROM word WHERE id IN" +

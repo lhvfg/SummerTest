@@ -26,8 +26,9 @@ public class DeriveWordUtil {
             if (frontAdd.size()!=0)
             {
                 frontAdd.forEach(word -> {
-                    if (!derviedWords.contains(word))
+                    if (!derviedWords.contains(word)&&derviedWords.size()<8) {
                         derviedWords.add(word);
+                    }
                 });
             }
             String endHandledSpell = copySpell.substring(0,copySpell.length()-1); //末尾字符截去
@@ -35,12 +36,12 @@ public class DeriveWordUtil {
             if (endAdd.size()!=0)
             {
                 endAdd.forEach(word -> {
-                    if (!derviedWords.contains(word))
+                    if (!derviedWords.contains(word)&&derviedWords.size()<8)
                         derviedWords.add(word);
                 });
             }
             //copySpell收尾截去一个字符迭代
-            copySpell = copySpell.substring(1,copySpell.length()-1);
+            copySpell = copySpell.substring(0,copySpell.length()-1);
         }
         //这里包含了自己的拼写
         Derive[] derives = new Derive[derviedWords.size()-1];

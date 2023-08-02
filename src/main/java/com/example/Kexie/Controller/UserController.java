@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Time;
 import java.text.ParseException;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -110,7 +111,8 @@ public class UserController {
             //今日首次登录
             if (!dateString.equals(loginUser.getLastLoginTime()))
             {
-                User updateUser= new User(0,null,dateString);
+                Time t = new Time(0,0,0);
+                User updateUser= new User(0,t,dateString);
                 userDao.update(updateUser,new LambdaQueryWrapper<User>().eq(User::getId,loginUser.getId()));
             }
         }

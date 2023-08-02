@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.*;
+import java.sql.Time;
 
 @SpringBootTest
 @RestController
@@ -139,5 +140,10 @@ class DemoApplicationTests {
             }
         }
         reader.close();
+    }
+    @Test
+    public void timeShow(){
+        Time time = new Time(0,0,0);
+        System.out.println(time);
     }
     }

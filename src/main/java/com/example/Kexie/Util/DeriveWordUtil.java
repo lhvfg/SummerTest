@@ -21,22 +21,22 @@ public class DeriveWordUtil {
         String copySpell = spell;
         while(derviedWords.size()<4&&copySpell.length()>1)
         {
-            String frontHandledSpell = copySpell.substring(1); //首个字符截去
-            List<Word> frontAdd = wordDao.selectList(new LambdaQueryWrapper<Word>().like(Word::getSpell, frontHandledSpell));
-            if (frontAdd.size()!=0)
-            {
-                frontAdd.forEach(word -> {
-                    if (!derviedWords.contains(word)&&derviedWords.size()<8) {
-                        derviedWords.add(word);
-                    }
-                });
-            }
+//            String frontHandledSpell = copySpell.substring(1); //首个字符截去
+//            List<Word> frontAdd = wordDao.selectList(new LambdaQueryWrapper<Word>().like(Word::getSpell, frontHandledSpell));
+//            if (frontAdd.size()!=0)
+//            {
+//                frontAdd.forEach(word -> {
+//                    if (!derviedWords.contains(word)&&derviedWords.size()<8) {
+//                        derviedWords.add(word);
+//                    }
+//                });
+//            }
             String endHandledSpell = copySpell.substring(0,copySpell.length()-1); //末尾字符截去
             List<Word> endAdd = wordDao.selectList(new LambdaQueryWrapper<Word>().like(Word::getSpell, endHandledSpell));
             if (endAdd.size()!=0)
             {
                 endAdd.forEach(word -> {
-                    if (!derviedWords.contains(word)&&derviedWords.size()<8)
+                    if (derviedWords.contains(word)&&derviedWords.size()<6)
                         derviedWords.add(word);
                 });
             }

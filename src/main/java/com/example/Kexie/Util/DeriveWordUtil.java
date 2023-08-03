@@ -36,7 +36,7 @@ public class DeriveWordUtil {
             if (endAdd.size()!=0)
             {
                 endAdd.forEach(word -> {
-                    if (derviedWords.contains(word)&&derviedWords.size()<6)
+                    if (!derviedWords.contains(word)&&derviedWords.size()<6)
                         derviedWords.add(word);
                 });
             }

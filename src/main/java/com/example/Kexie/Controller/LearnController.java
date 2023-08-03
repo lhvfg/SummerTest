@@ -165,6 +165,14 @@ public class LearnController {
            result.setWordNum(book_wordDao.getLearnNum(bookId,userId));
            result.setStatus("learnNumSuccess");
         }
+        //添加笔记
+        else if(reciteDate.getRequestType().equals("addNote"))
+        {
+            if (noteDao.insert(new Note(wordId,userId,reciteDate.getNote()))!=0)
+            {
+                result.setStatus("noteAddSuccess");
+            }
+        }
         return result;
     }
 

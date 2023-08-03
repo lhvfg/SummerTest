@@ -15,6 +15,6 @@ public class ReciteFrontData {
     private Integer time;
     //在背那一本
     private Integer bookId;
-    //是否开启生词本学习
-    private Boolean starOpen;
+    //添加的笔记内容
+    private String note;
 }

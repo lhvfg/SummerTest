@@ -6,5 +6,7 @@ import lombok.Data;
 public class ReviewFrontData {
   private Integer bookId;
   private Integer userId;
+  private Integer wordId;
   private String requestType;
+  private String today;
 }

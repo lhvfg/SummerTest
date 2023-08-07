@@ -31,4 +31,10 @@ public interface WordDao extends BaseMapper<Word> {
             "(SELECT wu.word_id FROM word_user wu WHERE wu.count = #{count} AND wu.user_id = #{userId} AND wu.finish = 0 AND wu.recite = 0 AND wu.word_id IN" +
             "(SELECT sb.word_id FROM star_book sb WHERE sb.user_id = #{userId}))")
     List<Word> selectCountStarWords(Integer count,Integer userId);
+    //获取要复习的单词书词但不是标星词
+    @Select("select * from word where id in (select word_id from word_user where recite = 1 and finish = 0 and user_id = #{userId} and (next_review is null or next_review <=#{today})) and id in (select word_id from book_word where book_id = #{bookId}) and id not in (select word_id from star_book where user_id = #{userId})")
+    List<Word> selectReviewBookWords(Integer userId,Integer bookId,String today);
+    //获取要复习的标星词
+    @Select("select * from word where id in (select word_id from word_user where recite = 1 and finish = 0 and user_id = #{userId} and (next_review is null or next_review <=#{today})) and id in (select word_id from star_book where user_id = #{userId})")
+    List<Word> selectReviewStarWords(Integer userId,String today);
 }

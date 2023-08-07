@@ -6,15 +6,13 @@ import com.example.Kexie.Util.GetNumUtil;
 import com.example.Kexie.Util.SynonymousUtil;
 import com.example.Kexie.dao.*;
 import com.example.Kexie.domain.*;
-import com.example.Kexie.domain.BasicPojo.Meaning;
-import com.example.Kexie.domain.BasicPojo.Note;
-import com.example.Kexie.domain.BasicPojo.Sentence;
-import com.example.Kexie.domain.BasicPojo.Word;
+import com.example.Kexie.domain.BasicPojo.*;
 import com.example.Kexie.domain.Result.ReciteResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,7 +64,14 @@ public class ReviewController {
             result.setStatus("getWordSuccess");
             result.setReviewWords(reciteWordData);
         }
-
+        //设置stage和下次复习时间
+        else if (reviewDate.getRequestType().equals("setNextTime"))
+        {
+            Word_user word_user = new Word_user(Date.valueOf(reviewDate.getNextTime()),reviewDate.getStage());
+            if (word_userDao.update(word_user,new LambdaQueryWrapper<Word_user>().eq(Word_user::getWordId,wordId).eq(Word_user::getUserId,userId))==1) {
+                result.setStatus("setTimeSuccess");
+            }
+        }
         return result;
     };
     private Integer getNum(String type, Integer bookId, Integer userId)
@@ -94,10 +99,12 @@ public class ReviewController {
                 reciteWordData.add(new ReciteWordData());
                     System.out.println("添加数据后recite长度为"+reciteWordData.size());
                     reciteWordData.get(i).setSpell(spell);
-                    //此处为所处答题阶段 -1未复习过、0忘记了，1模糊，2完成
+                    //此处count为所处答题阶段 -1未复习过、0忘记了，1模糊，2完成
                     reciteWordData.get(i).setCount(-1);
                     reciteWordData.get(i).setStar(star);
                     reciteWordData.get(i).setWordId(wordId);
+                    //stage为遗忘曲线间隔的阶段，0下次天数加2，1加3,2加5,3加8,4加16
+                    reciteWordData.get(i).setStage(word_userDao.selectStage(wordId,userId));
                     //例句
                     List<Sentence> sentence = sentenceDao.selectList(new LambdaQueryWrapper<Sentence>().eq(Sentence::getWordId, wordId));
                     reciteWordData.get(i).setSentence(sentence);

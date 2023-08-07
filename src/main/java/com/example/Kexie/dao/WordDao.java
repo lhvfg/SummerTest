@@ -37,4 +37,5 @@ public interface WordDao extends BaseMapper<Word> {
     //获取要复习的标星词
     @Select("select * from word where id in (select word_id from word_user where recite = 1 and finish = 0 and user_id = #{userId} and (next_review is null or next_review <=#{today})) and id in (select word_id from star_book where user_id = #{userId})")
     List<Word> selectReviewStarWords(Integer userId,String today);
+
 }

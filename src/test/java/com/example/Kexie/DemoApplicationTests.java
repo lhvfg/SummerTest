@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.*;
+import java.sql.Date;
 import java.sql.Time;
 
 @SpringBootTest
@@ -144,6 +145,7 @@ class DemoApplicationTests {
     @Test
     public void timeShow(){
         Time time = new Time(0,0,0);
-        System.out.println(time);
+        Date date = Date.valueOf("2023-08-07");
+        System.out.println(date);
     }
     }

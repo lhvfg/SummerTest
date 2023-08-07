@@ -28,4 +28,5 @@ public class ReciteWordData {
     private List<Note> notes;
     //是否是生词
     private boolean star;
+    private Integer stage;
 }

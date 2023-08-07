@@ -2,10 +2,7 @@ package com.example.Kexie.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.example.Kexie.domain.BasicPojo.Word_user;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 @Mapper
 public interface Word_userDao extends BaseMapper<Word_user> {
@@ -33,4 +30,7 @@ public interface Word_userDao extends BaseMapper<Word_user> {
     //插入记录，防止出现单词次数清空后设置标熟又取消后丢失数据，无法更新count数据
     @Insert("INSERT INTO word_user (recite, count, finish, user_id, word_id) VALUES (0,1,0,#{userId},#{wordId})")
     boolean insertData(Integer userId,Integer wordId);
+    //获取stage
+    @Select("select stage from word_user where word_id = #{wordId} and user_id = #{userId}")
+    Integer selectStage(Integer wordId,Integer userId);
 }

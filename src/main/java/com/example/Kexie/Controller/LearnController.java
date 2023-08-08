@@ -2,6 +2,7 @@ package com.example.Kexie.Controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.example.Kexie.Util.DeriveWordUtil;
+import com.example.Kexie.Util.GetNumUtil;
 import com.example.Kexie.Util.SynonymousUtil;
 import com.example.Kexie.dao.*;
 import com.example.Kexie.domain.*;
@@ -162,7 +163,8 @@ public class LearnController {
         //获取单词数
         else if(reciteDate.getRequestType().equals("getNum"))
         {
-           result.setWordNum(book_wordDao.getLearnNum(bookId,userId));
+            GetNumUtil getNumUtil = new GetNumUtil();
+           result.setWordNum(getNumUtil.getNum("learnNum",null,bookId,userId,null,book_wordDao,starBookDao));
            result.setStatus("learnNumSuccess");
         }
         //添加笔记

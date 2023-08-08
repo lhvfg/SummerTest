@@ -47,16 +47,17 @@ public class ReviewController {
         Integer bookId = reviewDate.getBookId();
         Integer userId = reviewDate.getUserId();
         Integer wordId = reviewDate.getWordId();
+        String today = reviewDate.getToday();
         //初始化单词数据
         reciteWordData = new ArrayList<>();
         if (reviewDate.getRequestType().equals("getNum"))
         {
-            result.setWordNum(getNum("reviewNum",bookId,userId));
+            GetNumUtil getNumUtil = new GetNumUtil();
+            result.setWordNum(getNumUtil.getNum("reviewNum",today,bookId,userId,wordDao,null,null));
             result.setStatus("reciteNumSuccess");
         }
         else if(reviewDate.getRequestType().equals("getWords"))
         {
-            String today = reviewDate.getToday();
             List<Word> bookWords = wordDao.selectReviewBookWords(userId,bookId,today);
             List<Word> starWords = wordDao.selectReviewStarWords(userId,today);
             getWordDate(starWords,userId,0,starWords.size(),true);
@@ -67,26 +68,15 @@ public class ReviewController {
         //设置stage和下次复习时间
         else if (reviewDate.getRequestType().equals("setNextTime"))
         {
-            Word_user word_user = new Word_user(Date.valueOf(reviewDate.getNextTime()),reviewDate.getStage());
+            Date date =Date.valueOf(reviewDate.getNextTime());
+            System.out.println(reviewDate.getNextTime());
+            Word_user word_user = new Word_user(date,reviewDate.getStage());
             if (word_userDao.update(word_user,new LambdaQueryWrapper<Word_user>().eq(Word_user::getWordId,wordId).eq(Word_user::getUserId,userId))==1) {
                 result.setStatus("setTimeSuccess");
             }
         }
         return result;
     };
-    private Integer getNum(String type, Integer bookId, Integer userId)
-    {
-        Integer ans=0;
-        if (type.equals("learnNum"))
-        {
-            ans= book_wordDao.getLearnNum(bookId,userId);
-        }
-        else if (type.equals("reviewNum"))
-        {
-            ans= book_wordDao.getReviewNum(bookId,userId);
-        }
-        return ans;
-    }
     //整合单词显示数据
     private void getWordDate(List<Word> words, Integer userId, Integer beg, Integer end, boolean star)
     {

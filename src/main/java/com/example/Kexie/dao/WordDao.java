@@ -6,6 +6,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
+
+import java.sql.Date;
 import java.util.List;
 
 @Mapper
@@ -37,5 +39,7 @@ public interface WordDao extends BaseMapper<Word> {
     //获取要复习的标星词
     @Select("select * from word where id in (select word_id from word_user where recite = 1 and finish = 0 and user_id = #{userId} and (next_review is null or next_review <=#{today})) and id in (select word_id from star_book where user_id = #{userId})")
     List<Word> selectReviewStarWords(Integer userId,String today);
-
+    //查询要复习的单词数量
+    @Select("select count(*) from word where id in (select word_id from word_user where recite = 1 and finish = 0 and user_id = 2 and (next_review is null or next_review <=#{today})) and (id in (select word_id from book_word where book_id = 8) or id in (select word_id from star_book where user_id = 2))")
+    Integer getReviewNum(Integer bookId, Integer userId, Date today);
 }

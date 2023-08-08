@@ -146,6 +146,7 @@ class DemoApplicationTests {
     public void timeShow(){
         Time time = new Time(0,0,0);
         Date date = Date.valueOf("2023-08-07");
-        System.out.println(date);
+        java.util.Date date1 = new java.util.Date();
+        System.out.println(date1);
     }
     }

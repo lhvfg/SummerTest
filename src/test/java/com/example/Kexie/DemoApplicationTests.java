@@ -149,4 +149,8 @@ class DemoApplicationTests {
         java.util.Date date1 = new java.util.Date();
         System.out.println(date1);
     }
+    @Test
+    public void mpTry(){
+        System.out.println(book_wordDao.selectCount(new LambdaQueryWrapper<Book_word>().eq(Book_word::getBook_id,8)));
+    }
     }

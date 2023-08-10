@@ -39,7 +39,10 @@ public interface WordDao extends BaseMapper<Word> {
     //获取要复习的标星词
     @Select("select * from word where id in (select word_id from word_user where recite = 1 and finish = 0 and user_id = #{userId} and (next_review is null or next_review <=#{today})) and id in (select word_id from star_book where user_id = #{userId})")
     List<Word> selectReviewStarWords(Integer userId,String today);
-    //查询要复习的单词数量
-    @Select("select count(*) from word where id in (select word_id from word_user where recite = 1 and finish = 0 and user_id = 2 and (next_review is null or next_review <=#{today})) and (id in (select word_id from book_word where book_id = 8) or id in (select word_id from star_book where user_id = 2))")
+    //查询要今日复习的单词数量
+    @Select("select count(*) from word where id in (select word_id from word_user where recite = 1 and finish = 0 and user_id = #{userId} and (next_review is null or next_review <=#{today})) and (id in (select word_id from book_word where book_id = #{bookId}) or id in (select word_id from star_book where user_id = #{userId}))")
     Integer getReviewNum(Integer bookId, Integer userId, Date today);
+    //查询生词本与单词书内背过或标熟的单词数量
+    @Select("select count(*) from word where id in (select word_id from word_user where (recite = 1 or finish = 1) and user_id = #{userId}) and (id in (select word_id from book_word where book_id = #{bookId}) or id in (select word_id from star_book where user_id = #{userId}))")
+    Integer getRecitedNum(Integer bookId, Integer userId);
 }

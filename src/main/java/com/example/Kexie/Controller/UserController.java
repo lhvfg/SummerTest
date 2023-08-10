@@ -109,6 +109,8 @@ public class UserController {
             httpSession.setAttribute("userId",loginUser.getId());
             System.out.println("登录后的session地址是"+httpSession+"其中的userID是"+httpSession.getAttribute("userId"));
             //今日首次登录
+            System.out.println(dateString);
+            System.out.println(loginUser.getLastLoginTime());
             if (!dateString.equals(loginUser.getLastLoginTime()))
             {
                 Time t = new Time(0,0,0);

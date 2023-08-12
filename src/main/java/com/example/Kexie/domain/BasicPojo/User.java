@@ -21,6 +21,9 @@ public class User {
     private Integer teamId;
     private String email;
     private String lastLoginTime;
+    private String lastClockinTime;
+    private Integer accumulateDay;
+    private Integer successiveDay;
 
     public User() {
     }
@@ -34,5 +37,10 @@ public class User {
         this.todayNum = todayNum;
         this.todayTime = todayTime;
         this.lastLoginTime = lastLoginTime;
+    }
+
+    public User(String lastClockinTime, Integer accumulateDay) {
+        this.lastClockinTime = lastClockinTime;
+        this.accumulateDay = accumulateDay;
     }
 }

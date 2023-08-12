@@ -85,7 +85,7 @@ public class BookController {
     @PostMapping("/chooseBook")
     public Result chooseBook(@RequestBody BookData bookDate, HttpSession httpSession)
     {
-        //System.out.println(httpSession+"地址中的userId为"+httpSession.getAttribute("userId"));
+        System.out.println("检测到选书请求");
         Result result = new Result();
         if(bookDate.getRequestType().equals("chooseBookRequest")) {
             List<Book> books = bookDao.selectList(null);
@@ -95,11 +95,13 @@ public class BookController {
         else if(bookDate.getRequestType().equals("chooseBookAdd")){
             Book_user book_user = new Book_user(bookDate.getBookId(),bookDate.getUserId());
             book_userDao.insert(book_user);
+            System.out.println("添加成功"+book_userDao.selectOne(new LambdaQueryWrapper<Book_user>().eq(Book_user::getUserId,bookDate.getUserId())));
             result.setStatus("chooseSucceed");
         }
         else if(bookDate.getRequestType().equals("chooseBookUpdate")){
             Book_user book_user = new Book_user(bookDate.getBookId(),bookDate.getUserId());
             book_userDao.update(book_user,new LambdaQueryWrapper<Book_user>().eq(Book_user::getUserId,bookDate.getUserId()));
+            System.out.println("更换成功"+book_userDao.selectOne(new LambdaQueryWrapper<Book_user>().eq(Book_user::getUserId,bookDate.getUserId())));
             result.setStatus("chooseSucceed");
         }
         return result;

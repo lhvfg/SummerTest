@@ -41,7 +41,7 @@ public class DashBoardController {
     public DashBoardResult getDashBoardData(@RequestBody DashBoardFrontData frontData) {
         Integer userId = frontData.getUserId();
         Integer bookId = frontData.getBookId();
-        Long bookWordNum = book_wordDao.selectCount(new LambdaQueryWrapper<Book_word>().eq(Book_word::getBook_id,8));
+        Long bookWordNum = book_wordDao.selectCount(new LambdaQueryWrapper<Book_word>().eq(Book_word::getBook_id,bookId));
         User user = userDao.selectOne(new LambdaQueryWrapper<User>().eq(User::getId,userId));
         String bookName = bookDao.selectOne(new LambdaQueryWrapper<Book>().eq(Book::getId,bookId)).getBookName();
         Long starNum = starBookDao.selectCount(new LambdaQueryWrapper<StarBook>().eq(StarBook::getUser_id,userId));

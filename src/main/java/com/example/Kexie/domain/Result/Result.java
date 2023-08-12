@@ -28,11 +28,13 @@ public class Result {
     private ArrayList<ReciteWordData> reciteOneWordDates;
     private ArrayList<ReciteWordData> reciteTwoWordDates;
     private Integer wordNum;
+    private String lastClockinTime;
+    private Integer accumulateDay;
 
     public Result() {
     }
 
-    public Result(String status, String userName, Integer userId, Integer todayNum, Integer allNum, Time todayTime, Time allTime, Integer teamId, Integer bookId) {
+    public Result(String status, String userName, Integer userId, Integer todayNum, Integer allNum, Time todayTime, Time allTime, Integer teamId, Integer bookId,String lastClockinTime,Integer accumulateDay) {
         this.status = status;
         this.userName = userName;
         this.userId = userId;
@@ -42,6 +44,8 @@ public class Result {
         this.allTime = allTime;
         this.teamId = teamId;
         this.bookId = bookId;
+        this.lastClockinTime = lastClockinTime;
+        this.accumulateDay = accumulateDay;
     }
 
     public Result(String status) {

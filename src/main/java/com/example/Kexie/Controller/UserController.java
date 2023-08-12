@@ -6,6 +6,7 @@ import com.example.Kexie.dao.TeamDao;
 import com.example.Kexie.dao.UserDao;
 import com.example.Kexie.domain.*;
 import com.example.Kexie.domain.BasicPojo.Book_user;
+import com.example.Kexie.domain.Result.ClockInResult;
 import com.example.Kexie.domain.Result.Result;
 import com.example.Kexie.domain.BasicPojo.User;
 import jakarta.servlet.http.HttpSession;
@@ -95,17 +96,17 @@ public class UserController {
         String userName = user.getUserName();
         String password = user.getPassword();
         User loginUser = userDao.selectOne( new LambdaQueryWrapper<User>().eq(User::getUserName,userName));
+        if(loginUser == null)
+        {
+            return new Result("UserNotExist");
+        }
         Integer userId = loginUser.getId();
         Book_user book_user = book_userDao.selectOne(new LambdaQueryWrapper<Book_user>().eq(Book_user::getUserId,userId));
-        if(userId == null)
-        {
-             result = new Result("UserNotExist");
-        }
-        else if (loginUser.getPassword().equals(DigestUtils.md5DigestAsHex(password.getBytes()))){
+        if (loginUser.getPassword().equals(DigestUtils.md5DigestAsHex(password.getBytes()))){
             Integer chooseBookId = null;
             if(book_user != null)
                  chooseBookId = book_user.getBookId();
-            result = new Result("loginSucceed",userName,userId,loginUser.getTodayNum(),loginUser.getAllNum(),loginUser.getTodayTime(),loginUser.getAllTime(),loginUser.getTeamId(),chooseBookId);
+            result = new Result("loginSucceed",userName,userId,loginUser.getTodayNum(),loginUser.getAllNum(),loginUser.getTodayTime(),loginUser.getAllTime(),loginUser.getTeamId(),chooseBookId, loginUser.getLastClockinTime(),loginUser.getAccumulateDay());
             httpSession.setAttribute("userId",loginUser.getId());
             System.out.println("登录后的session地址是"+httpSession+"其中的userID是"+httpSession.getAttribute("userId"));
             //今日首次登录
@@ -181,5 +182,17 @@ public class UserController {
             }
         }
         return result;
+    }
+    @PostMapping("/clockin")
+    public ClockInResult clockIn(@RequestBody User user){
+        Integer userId = user.getId();
+        String dateString = user.getLastClockinTime();
+        User loginUser = userDao.selectOne( new LambdaQueryWrapper<User>().eq(User::getId,userId));
+        System.out.println(dateString);
+        System.out.println(loginUser.getLastClockinTime());
+        Integer days = loginUser.getAccumulateDay()+1;
+        User updateUser= new User(dateString,days);
+        userDao.update(updateUser,new LambdaQueryWrapper<User>().eq(User::getId,loginUser.getId()));
+        return new ClockInResult("clockInSuccess",days);
     }
 }

@@ -103,7 +103,7 @@ public class WordController {
                 Meaning meaning = new Meaning();
                 meaning.setWordId(wordId);
                 meaning.setContent(meaningContent[i]);
-                meaning.setFunction(function[i]);
+                meaning.setPart(function[i]);
                 meaningDao.insert(meaning);
             }
             result.setStatus("addWordSucceed");
@@ -157,7 +157,7 @@ public class WordController {
                         System.out.println(detail[1]);
                         String content = detail[1];
                         Meaning meaning = new Meaning(wordId, content, function);
-                        LambdaQueryWrapper<Meaning> lqw = new LambdaQueryWrapper<Meaning>().eq(Meaning::getWordId,wordId).eq(Meaning::getFunction,function);
+                        LambdaQueryWrapper<Meaning> lqw = new LambdaQueryWrapper<Meaning>().eq(Meaning::getWordId,wordId).eq(Meaning::getPart,function);
                         if(meaningDao.selectOne(lqw)==null)
                         meaningDao.insert(meaning);
                         else{

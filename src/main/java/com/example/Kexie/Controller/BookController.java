@@ -61,7 +61,16 @@ public class BookController {
             else{
                 qw.select("max(id) as id");
                 result.setStatus("bookNotExist");
-                result.setBookId(bookDao.selectOne(qw).getId());
+                Book b = bookDao.selectOne(qw);
+                Integer bookId;
+                if (b == null)
+                {
+                    bookId = 1;
+                }
+                else{
+                    bookId=b.getId();
+                }
+                result.setBookId(bookId);
             }
         }
         //添加单词书

@@ -22,7 +22,7 @@ public class SynonymousUtil {
             //获取含有相同释义的所有meaning数据
             List<Meaning> meanings = meaningDao.selectList(
                     new LambdaQueryWrapper<Meaning>()
-                            .eq(Meaning::getFunction, wordMean.getFunction())//词性相同
+                            .eq(Meaning::getPart, wordMean.getPart())//词性相同
                             .like(Meaning::getContent, wordMeanContent)//模糊查询，包含相同释义
                             .ne(Meaning::getId, wordMean.getId())//不是自己
             );
@@ -30,7 +30,7 @@ public class SynonymousUtil {
             if (meanings.size() > 0) {
                 //System.out.println("存在近义词");
                 //设置前键
-                s.setFunction(meanings.get(0).getFunction());
+                s.setFunction(meanings.get(0).getPart());
                 s.setMeaning(wordMeanContent);
                 //对于每个释义相应的单词id，查询对应拼写
                 meanings.forEach(m -> {

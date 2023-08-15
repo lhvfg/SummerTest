@@ -10,7 +10,7 @@ public class Meaning {
     private Integer id;
     private Integer wordId;
     private String content;
-    private String function;
+    private String part;
 
     public Meaning() {
     }
@@ -18,6 +18,6 @@ public class Meaning {
     public Meaning(Integer wordId, String content, String function) {
         this.wordId = wordId;
         this.content = content;
-        this.function = function;
+        this.part = function;
     }
 }

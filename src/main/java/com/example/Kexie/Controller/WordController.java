@@ -133,11 +133,11 @@ public class WordController {
                 if (i == 0) {
                     System.out.println("111" + line);
                     Word word = new Word(line);
-                    wordId = wordDao.selectWordId(line);
+                    wordId = wordDao.getWordId(line);
                     if(wordId == null)
                     {
                         wordDao.insert(word);
-                        wordId = wordDao.selectWordId(line);
+                        wordId = wordDao.getWordId(line);
                     }
                     for (Integer bookId : bookIds) {
                         //如果这本书里没有

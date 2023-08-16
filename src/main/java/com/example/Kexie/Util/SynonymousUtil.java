@@ -34,7 +34,7 @@ public class SynonymousUtil {
                 s.setMeaning(wordMeanContent);
                 //对于每个释义相应的单词id，查询对应拼写
                 meanings.forEach(m -> {
-                    String spell = wordDao.selectReciteWordSpell(m.getWordId());
+                    String spell = wordDao.getSpell(m.getWordId());
                     spells.add(spell);
                 });
                 //返回除了自己所有近义词的拼写

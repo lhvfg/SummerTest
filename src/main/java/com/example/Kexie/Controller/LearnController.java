@@ -183,7 +183,6 @@ public class LearnController {
     private void getWordDate(List<Word> words,Integer userId,Integer count,Integer beg,Integer end,boolean star)
     {
         if (words.size()!=0) {
-            System.out.println(words.size());
             for (int i = beg; i < end; i++) {
                 String spell = words.get(i-beg).getSpell();
                 Integer wordId = words.get(i-beg).getId();

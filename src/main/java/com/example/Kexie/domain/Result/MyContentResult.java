@@ -11,6 +11,7 @@ import java.util.List;
 @Data
 public class MyContentResult {
     private String status;
+    private String bookName;
     private ContentNumData contentNumData;
     private ArrayList<ContentWordData> unRecite;
     private ArrayList<ContentWordData> learning;
@@ -24,6 +25,15 @@ public class MyContentResult {
     public MyContentResult(String status, ContentNumData contentNumData) {
         this.status = status;
         this.contentNumData = contentNumData;
+    }
+
+    public MyContentResult(String status, String bookName, ArrayList<ContentWordData> unRecite, ArrayList<ContentWordData> learning, ArrayList<ContentWordData> recited, ArrayList<ContentWordData> finish) {
+        this.status = status;
+        this.bookName = bookName;
+        this.unRecite = unRecite;
+        this.learning = learning;
+        this.recited = recited;
+        this.finish = finish;
     }
 
     public MyContentResult(String status, ArrayList<ContentWordData> unRecite, ArrayList<ContentWordData> learning, ArrayList<ContentWordData> recited, ArrayList<ContentWordData> finish) {

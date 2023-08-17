@@ -19,10 +19,16 @@ public interface WordDao extends BaseMapper<Word> {
     //用拼写获取id
     @Select("SELECT id FROM word where spell=#{spell}")
     Integer getWordId(String spell);
+    //获取某用户在某本单词书中没背过的单词无所谓生词
+    @Select("SELECT * FROM word WHERE (id IN (SELECT word_id from book_word where book_id=#{bookId} and word_id not in (SELECT word_id from word_user where user_id = #{userId} and count != 0)))")
+    List<Word> selectUnRecite(Integer bookId,Integer userId);
     //获取某用户在某本单词书中没背过的单词但又不是生词
     @Select("SELECT * FROM word WHERE (id IN (SELECT word_id from book_word where book_id=#{bookId} and word_id not in (SELECT word_id from word_user where user_id = #{userId} and count != 0)) and id not in (select word_id from star_book where user_id = #{userId}))")
     List<Word> selectNewWords(Integer bookId,Integer userId);
-    //查询某用户在某本书中背过特定次数的单词
+    //查询某用户在某本书中背过特定次数的单词无所谓生词
+    @Select("SELECT * FROM word WHERE id IN (SELECT wu.word_id FROM word_user wu WHERE wu.count = #{count} AND wu.user_id = #{userId} AND wu.finish = 0 AND wu.recite = 0 AND wu.word_id IN (SELECT bw.word_id FROM book_word bw WHERE bw.book_id = #{bookId}))")
+    List<Word> selectLearning(Integer count,Integer userId,Integer bookId);
+    //查询某用户在某本书中背过特定次数的单词但不是生词
     @Select("SELECT * FROM word WHERE id IN (SELECT wu.word_id FROM word_user wu WHERE wu.count = #{count} AND wu.user_id = #{userId} AND wu.finish = 0 AND wu.recite = 0 AND wu.word_id IN (SELECT bw.word_id FROM book_word bw WHERE bw.book_id = #{bookId}))and id not in (select word_id from star_book where user_id = #{userId})")
     List<Word> selectCountWords(Integer count,Integer userId,Integer bookId);
     //在生词本中的新单词
@@ -46,13 +52,13 @@ public interface WordDao extends BaseMapper<Word> {
     @Select("select count(*) from word where id in (select word_id from word_user where (recite = 1 or finish = 1) and user_id = #{userId}) and (id in (select word_id from book_word where book_id = #{bookId}) or id in (select word_id from star_book where user_id = #{userId}))")
     Integer getRecitedNum(Integer bookId, Integer userId);
     //获取某用户在这本书中正在复习的单词
-    @Select("select * from word where id in (select word_id from word_user where finish != 1 and recite =1 and stage <=4 and user_id = #{userId}) and id in (select word_id from book_word where book_id = #{bookId})")
+    @Select("select * from word where id in (select word_id from word_user where finish != 1 and recite =1 and (stage <=4 or stage is null) and user_id = #{userId}) and id in (select word_id from book_word where book_id = #{bookId})")
     List<Word> selectRecitedWord(Integer userId,Integer bookId);
     //获取某用户在某本书中复习完的单词
     @Select("select * from word where id in (select word_id from word_user where (finish = 1 or stage = 5) and user_id = #{userId})and id in (select word_id from book_word where book_id = #{bookId})")
     List<Word> selectFinishedWord(Integer userId,Integer bookId);
     //获取所有在复习的单词
-    @Select("select * from word where id in (select word_id from word_user where finish != 1 and recite =1 and stage <=4 and user_id = #{userId})")
+    @Select("select * from word where id in (select word_id from word_user where finish != 1 and recite =1 and (stage <=4 or stage is null) and user_id = #{userId})")
     List<Word> selectAllRecitedWord(Integer userId);
     //获取所有复习完成的单词
     @Select("select * from word where id in (select word_id from word_user where (finish = 1 or stage = 5) and user_id = #{userId})")

@@ -80,17 +80,17 @@ public class DataController {
         }
         else if(frontData.getRequestType().equals("getBookData")){
             clearArrayList();
-            List<Word> _unRecite = wordDao.selectNewWords(bookId,userId);
-            _unRecite.addAll(wordDao.selectCountWords(0,userId,bookId));
-            List<Word> _learning = wordDao.selectCountWords(1,userId,bookId);
-            _learning.addAll(wordDao.selectCountWords(2,userId,bookId));
+            List<Word> _unRecite = wordDao.selectUnRecite(bookId,userId);
+            //_unRecite.addAll(wordDao.selectLearning(0,userId,bookId));
+            List<Word> _learning = wordDao.selectLearning(1,userId,bookId);
+            _learning.addAll(wordDao.selectLearning(2,userId,bookId));
             List<Word> _recited = wordDao.selectRecitedWord(userId, bookId);
             List<Word> _finish = wordDao.selectFinishedWord(userId, bookId);
             getWordData(_unRecite,0,userId,false);
             getWordData(_learning,1,userId,false);
             getWordData(_recited,2,userId,false);
             getWordData(_finish,3,userId,false);
-            result = new MyContentResult("getBookDataSuccess",unRecite,learning,recited,finish);
+            result = new MyContentResult("getBookDataSuccess",bookDao.selectOne(new LambdaQueryWrapper<Book>().eq(Book::getId,bookId)).getBookName(),unRecite,learning,recited,finish);
         }
         else if(frontData.getRequestType().equals("getRecited"))
         {
@@ -105,7 +105,7 @@ public class DataController {
         {
             clearArrayList();
             List<Word> _unRecite = wordDao.selectNewStarWords(userId,bookId);
-            _unRecite.addAll(wordDao.selectCountStarWords(0,userId));
+            //_unRecite.addAll(wordDao.selectCountStarWords(0,userId));
             List<Word> _learning = wordDao.selectCountStarWords(1,userId);
             _learning.addAll(wordDao.selectCountStarWords(2,userId));
             List<Word> _recited = wordDao.selectRecitedWord(userId, bookId);
@@ -139,10 +139,10 @@ public class DataController {
             star = starBookDao.selectOne(new LambdaQueryWrapper<StarBook>().eq(StarBook::getUser_id, userId).eq(StarBook::getWord_id, word.getId())) != null;
             if (star||!starOnly){
                 switch (type) {
-                    case 0 -> unRecite.add(new ContentWordData(word.getSpell(), meanings, star));
-                    case 1 -> learning.add(new ContentWordData(word.getSpell(), meanings, star));
-                    case 2 -> recited.add(new ContentWordData(word.getSpell(), meanings, star));
-                    case 3 -> finish.add(new ContentWordData(word.getSpell(), meanings, star));
+                    case 0 -> unRecite.add(new ContentWordData(word.getId(),word.getSpell(), meanings, star));
+                    case 1 -> learning.add(new ContentWordData(word.getId(),word.getSpell(), meanings, star));
+                    case 2 -> recited.add(new ContentWordData(word.getId(),word.getSpell(), meanings, star));
+                    case 3 -> finish.add(new ContentWordData(word.getId(),word.getSpell(), meanings, star));
                 }
             }
         });

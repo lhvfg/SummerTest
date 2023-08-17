@@ -9,6 +9,7 @@ import java.util.List;
 
 @Data
 public class ContentWordData {
+    private Integer wordId;
     private String spell;
     private List<Meaning> meanings;
     private List<Note> notes;
@@ -17,7 +18,9 @@ public class ContentWordData {
     public ContentWordData() {
     }
 
-    public ContentWordData(String spell, List<Meaning> meanings, boolean star) {
+
+    public ContentWordData(Integer wordId, String spell, List<Meaning> meanings, boolean star) {
+        this.wordId = wordId;
         this.spell = spell;
         this.meanings = meanings;
         this.star = star;

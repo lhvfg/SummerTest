@@ -32,7 +32,7 @@ public interface WordDao extends BaseMapper<Word> {
     @Select("SELECT * FROM word WHERE id IN (SELECT wu.word_id FROM word_user wu WHERE wu.count = #{count} AND wu.user_id = #{userId} AND wu.finish = 0 AND wu.recite = 0 AND wu.word_id IN (SELECT bw.word_id FROM book_word bw WHERE bw.book_id = #{bookId}))and id not in (select word_id from star_book where user_id = #{userId})")
     List<Word> selectCountWords(Integer count,Integer userId,Integer bookId);
     //在生词本中的新单词
-    @Select("SELECT * FROM word WHERE id IN(SELECT word_id from star_book where user_id=#{userId} and (word_id not in (select word_id from word_user where user_id = #{userId} and count != 0) ))")
+    @Select("SELECT * FROM word WHERE id IN(SELECT word_id from star_book where user_id=#{userId} and (word_id not in (select word_id from word_user where user_id = #{userId} and (count != 0 or recite = 1 or finish = 1)) ))")
     List<Word> selectNewStarWords(Integer userId,Integer bookId);
     //在生词本中背过特定次数的单词
     @Select("SELECT * FROM word WHERE id IN" +

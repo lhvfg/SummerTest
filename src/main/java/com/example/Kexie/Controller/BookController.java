@@ -40,7 +40,7 @@ public class BookController {
         // 进入页面，获取单词列表
         if(bookDate.getRequestType().equals("getWordList"))
         {
-            //1 创建IPage分页对象,设置分页参数,1为当前页码，20为每页显示的记录数
+            //1 创建IPage分页对象,设置分页参数,PageNumber为当前页码，15为每页显示的记录数
             IPage<Word> page=new Page<>(bookDate.getPageNumber(),15);
             //2 执行分页查询
             wordDao.selectPage(page,null);

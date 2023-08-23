@@ -17,7 +17,7 @@ public class MyContentResult {
     private ArrayList<ContentWordData> learning;
     private ArrayList<ContentWordData> recited;
     private ArrayList<ContentWordData> finish;
-    private ArrayList<ContentWordData> notes;
+    private ArrayList<ContentWordData> noteData;
 
     public MyContentResult() {
     }
@@ -52,6 +52,6 @@ public class MyContentResult {
 
     public MyContentResult(String status, ArrayList<ContentWordData> notes) {
         this.status = status;
-        this.notes = notes;
+        this.noteData = notes;
     }
 }

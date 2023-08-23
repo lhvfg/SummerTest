@@ -72,7 +72,7 @@ public class DataController {
         if(frontData.getRequestType().equals("getData"))
         {
             Long bookWordNum = book_wordDao.selectCount(new LambdaQueryWrapper<Book_word>().eq(Book_word::getBook_id, bookId));
-            Long allRecitedNum = word_userDao.selectCount(new LambdaQueryWrapper<Word_user>().eq(Word_user::getUserId, userId).eq(Word_user::getRecite, 1));
+            Long allRecitedNum = word_userDao.selectCount(new LambdaQueryWrapper<Word_user>().eq(Word_user::getUserId, userId).eq(Word_user::getRecite, 1))+wordDao.selectAllFinishedWord(userId).size();
             Long starNum = starBookDao.selectCount(new LambdaQueryWrapper<StarBook>().eq(StarBook::getUser_id, userId));
             Long noteNum = noteDao.selectCount(new LambdaQueryWrapper<Note>().eq(Note::getUserId, userId));
             ContentNumData contentNumData = new ContentNumData(bookWordNum, allRecitedNum, starNum, noteNum);
@@ -94,11 +94,12 @@ public class DataController {
         }
         else if(frontData.getRequestType().equals("getRecited"))
         {
+            System.out.println("21");
             clearArrayList();
             List<Word> _recited = wordDao.selectAllRecitedWord(userId);
             List<Word> _finish = wordDao.selectAllFinishedWord(userId);
             getWordData(_recited,2,userId,false);
-            getWordData(_finish,2,userId,false);
+            getWordData(_finish,3,userId,false);
             result = new MyContentResult("getRecitedWordSuccess",recited,finish);
         }
         else if(frontData.getRequestType().equals("getStar"))
@@ -108,8 +109,8 @@ public class DataController {
             //_unRecite.addAll(wordDao.selectCountStarWords(0,userId));
             List<Word> _learning = wordDao.selectCountStarWords(1,userId);
             _learning.addAll(wordDao.selectCountStarWords(2,userId));
-            List<Word> _recited = wordDao.selectRecitedWord(userId, bookId);
-            List<Word> _finish = wordDao.selectFinishedWord(userId, bookId);
+            List<Word> _recited = wordDao.selectAllRecitedWord(userId);
+            List<Word> _finish = wordDao.selectAllFinishedWord(userId);
             getWordData(_unRecite,0,userId,true);
             getWordData(_learning,1,userId,true);
             getWordData(_recited,2,userId,true);

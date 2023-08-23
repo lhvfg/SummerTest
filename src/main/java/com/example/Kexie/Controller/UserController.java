@@ -1,26 +1,26 @@
 package com.example.Kexie.Controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
+import com.example.Kexie.dao.Book_userDao;
+import com.example.Kexie.dao.TeamDao;
 import com.example.Kexie.dao.UserDao;
-import com.example.Kexie.domain.Data;
-import com.example.Kexie.domain.Result;
-import com.example.Kexie.domain.User;
+import com.example.Kexie.domain.*;
+import com.example.Kexie.domain.BasicPojo.Book_user;
+import com.example.Kexie.domain.Result.ClockInResult;
+import com.example.Kexie.domain.Result.Result;
+import com.example.Kexie.domain.BasicPojo.User;
 import jakarta.servlet.http.HttpSession;
 import net.jodah.expiringmap.ExpirationPolicy;
 import net.jodah.expiringmap.ExpiringMap;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
-import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.sql.Time;
+import java.text.ParseException;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -33,11 +33,41 @@ public class UserController {
     ExpiringMap<String, String> map = ExpiringMap.builder()
             .expiration(300, TimeUnit.SECONDS)
             .variableExpiration().expirationPolicy(ExpirationPolicy.CREATED).build();
+    @Autowired
+    Book_userDao book_userDao;
+    @Autowired
+    TeamDao teamDao;
+    //登录拦截
+    @RequestMapping("/index")
+    public Result goToLogin(){
+        System.out.println("登录拦截");
+        Result result = new Result("block");
+        return result;
+    }
+    //清除Session
+    @GetMapping("/clearSession")
+    public Result clear(HttpSession httpSession)
+    {
+        Result result = new Result();
+        System.out.println(httpSession.getAttribute("userId"));
+        if (httpSession.getAttribute("userId")!=null)
+        {
+            result.setStatus("clear");
+            httpSession.setAttribute("userId",null);
+        }
+        else {
+            result.setStatus("new");
+        }
+        return result;
+    }
     @PostMapping("/register")
     public Result add (@RequestBody User user)
     {
+        System.out.println(user.getUserName());
+        System.out.println(user.getEmail());
+        System.out.println(user.getPassword());
         Result result = new Result();
-        if (user.getUserName()!=null&&user.getPassword()!=null)
+        if (user.getUserName()!=null&&user.getPassword()!=null&&user.getEmail()!=null)
         {
             LambdaQueryWrapper<User> lqw = new LambdaQueryWrapper<>();
             lqw.eq(User::getUserName,user.getUserName());
@@ -60,34 +90,49 @@ public class UserController {
         return result;
     };
     @PostMapping("/login")
-    public Result login (@RequestBody User user, HttpSession httpSession)
-    {
-        Result result = new Result();
+    public Result login (@RequestBody User user, HttpSession httpSession) throws ParseException {
+        Result result;
+        String dateString = user.getLastLoginTime();
         String userName = user.getUserName();
         String password = user.getPassword();
-        User user1 = userDao.selectOne( new LambdaQueryWrapper<User>().eq(User::getUserName,userName));
-        if(user1 == null)
+        User loginUser = userDao.selectOne( new LambdaQueryWrapper<User>().eq(User::getUserName,userName));
+        if(loginUser == null)
         {
-            result.setStatus("UserNotExist");
+            return new Result("UserNotExist");
         }
-        else if (user1.getPassword().equals(DigestUtils.md5DigestAsHex(password.getBytes()))){
-            result.setStatus("loginSucceed");
-            httpSession.setAttribute("userId",user1.getId());
+        Integer userId = loginUser.getId();
+        Book_user book_user = book_userDao.selectOne(new LambdaQueryWrapper<Book_user>().eq(Book_user::getUserId,userId));
+        if (loginUser.getPassword().equals(DigestUtils.md5DigestAsHex(password.getBytes()))){
+            Integer chooseBookId = null;
+            if(book_user != null)
+                 chooseBookId = book_user.getBookId();
+            result = new Result("loginSucceed",userName,userId,loginUser.getTodayNum(),loginUser.getAllNum(),loginUser.getTodayTime(),loginUser.getAllTime(),loginUser.getTeamId(),chooseBookId, loginUser.getLastClockinTime(),loginUser.getAccumulateDay());
+            httpSession.setAttribute("userId",loginUser.getId());
+            System.out.println("登录后的session地址是"+httpSession+"其中的userID是"+httpSession.getAttribute("userId"));
+            //今日首次登录
+            System.out.println(dateString);
+            System.out.println(loginUser.getLastLoginTime());
+            if (!dateString.equals(loginUser.getLastLoginTime()))
+            {
+                Time t = new Time(0,0,0);
+                User updateUser= new User(0,t,dateString);
+                userDao.update(updateUser,new LambdaQueryWrapper<User>().eq(User::getId,loginUser.getId()));
+            }
         }
         else {
-            result.setStatus("PasswordWrong");
+            result = new Result("PasswordWrong");
         }
         return result;
     };
     @PostMapping("/changePassword")
-    public Result changeRequest(@RequestBody Data data) throws EmailException {
+    public Result changeRequest(@RequestBody UserData data) throws EmailException {
         Result result = new Result();
         StringBuffer sb=new StringBuffer();
         String userName = data.getUserName();
         if (userDao.selectOne( new LambdaQueryWrapper<User>().eq(User::getUserName,userName))==null){
             result.setStatus("UserNotExist");
         }
-        else if(data.getType().equals("changePasswordRequest"))
+        else if(data.getRequestType().equals("changePasswordRequest"))
         {
             LambdaQueryWrapper<User> lqw = new LambdaQueryWrapper<>();
             lqw.eq(User::getUserName,data.getUserName());
@@ -106,7 +151,7 @@ public class UserController {
                 int number=random.nextInt(62);
                 sb.append(str.charAt(number));
             }
-            map.put(data.getUserName(),sb.toString());
+            map.put(data.getUserName(),sb.toString());//如果还没过期，重复赋值也会覆盖之前的内容
             String code =map.get(data.getUserName());
             System.out.println("map中验证码是"+code);
             System.out.println("map中的数据数是"+map.size());
@@ -114,14 +159,14 @@ public class UserController {
             email.send();//进行发送
             result.setStatus("emailSented");
         }
-        else if(data.getType().equals("changePasswordTest"))
+        else if(data.getRequestType().equals("changePasswordTest"))
         {
             String code =map.get(data.getUserName());
             System.out.println("再次获取map中的数据数是"+map.size());
             System.out.println("再次获取map中的验证码是"+code);
             if(code==null)
             {
-                result.setStatus("changePasswordFail");
+                result.setStatus("codaExpired");
             }
             else if(data.getCode().equals(code))
             {
@@ -132,7 +177,22 @@ public class UserController {
                 userDao.update(user,lqw);
                 result.setStatus("changePasswordSucceed");
             }
+            else{
+                result.setStatus("codeWrong");
+            }
         }
         return result;
+    }
+    @PostMapping("/clockin")
+    public ClockInResult clockIn(@RequestBody User user){
+        Integer userId = user.getId();
+        String dateString = user.getLastClockinTime();
+        User loginUser = userDao.selectOne( new LambdaQueryWrapper<User>().eq(User::getId,userId));
+        System.out.println(dateString);
+        System.out.println(loginUser.getLastClockinTime());
+        Integer days = loginUser.getAccumulateDay()+1;
+        User updateUser= new User(dateString,days);
+        userDao.update(updateUser,new LambdaQueryWrapper<User>().eq(User::getId,loginUser.getId()));
+        return new ClockInResult("clockInSuccess",days);
     }
 }

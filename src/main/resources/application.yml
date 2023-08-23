@@ -2,7 +2,8 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/dbx
+    url: jdbc:mysql://localhost:3306/dbx #本地
+    #url: jdbc:mysql://47.115.226.106:3306/dbx #云
     username: root
     password: yiti241325
 
@@ -11,7 +12,7 @@ spring:
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    #log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   global-config:
       banner: off # 关闭mybatisplus启动图标
 
@@ -23,6 +24,6 @@ server:
       charset: UTF-8
       enabled: true
       force: true
-  port: 8080
+  port: 8010
 
 

@@ -81,6 +81,7 @@ public class BookController {
             Integer bookId = bookDate.getBookId();
             Integer userId = bookDate.getUserId();
             Book book = new Book(bookDate.getBookName(),bookDate.getHide(),wordNum,userId);
+            System.out.println(wordId);
             if (wordId!=null)
             for (int i=0;i<wordNum;i++) {
                 Book_word book_word = new Book_word(wordId[i],bookId);

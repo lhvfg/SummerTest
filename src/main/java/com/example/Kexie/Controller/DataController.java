@@ -58,7 +58,7 @@ public class DataController {
         Long starNum = starBookDao.selectCount(new LambdaQueryWrapper<StarBook>().eq(StarBook::getUser_id,userId));
         Integer recitedNum =wordDao.getRecitedNum(bookId,userId);
         Long allStudyNum = starNum+bookWordNum;
-        Long allRecitedNum = word_userDao.selectCount(new LambdaQueryWrapper<Word_user>().eq(Word_user::getUserId,userId).eq(Word_user::getRecite,1));
+        Long allRecitedNum = word_userDao.selectCount(new LambdaQueryWrapper<Word_user>().eq(Word_user::getUserId,userId).eq(Word_user::getRecite,1))+word_userDao.selectFinshedNum();
         DashBoardData data = new DashBoardData(bookName,starNum,recitedNum,allStudyNum,user.getTodayNum(),allRecitedNum,user.getTodayTime(),user.getAllTime());
         result.setStatus("getDataSuccess");
         result.setDashBoardData(data);

@@ -33,4 +33,7 @@ public interface Word_userDao extends BaseMapper<Word_user> {
     //获取stage
     @Select("select stage from word_user where word_id = #{wordId} and user_id = #{userId}")
     Integer selectStage(Integer wordId,Integer userId);
+    //获取标熟的单词数量
+    @Select("select count(*) from word_user where finish = 1")
+    Integer selectFinshedNum();
 }

@@ -1,10 +1,14 @@
 spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
+#    driver-class-name: org.postgresql.Driver
     driver-class-name: com.mysql.cj.jdbc.Driver
-    #url: jdbc:mysql://localhost:3306/dbx #本地
-    url: jdbc:mysql://47.115.226.106:3306/dbx #云
+#    url: jdbc:postgresql://localhost:15432/omm # openGauss
+    url: jdbc:mysql://localhost:3306/dbx #本地
+    #url: jdbc:mysql://47.115.226.106:3306/dbx #云
+#    username: gaussdb
     username: root
+#    password: Yiti@241325
     password: yiti241325
 
 
@@ -24,6 +28,6 @@ server:
       charset: UTF-8
       enabled: true
       force: true
-  port: 8010
+  port: 8080
 
 
